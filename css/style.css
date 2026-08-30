@@ -753,6 +753,93 @@ p {
   gap: 16px;
 }
 
+/* Fila de un producto dentro del carrito (generada por carrito.js) */
+.carrito-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto auto auto;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-concrete-dark);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.carrito-item-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.carrito-item-nombre {
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.carrito-item-precio {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.carrito-item-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.carrito-cantidad-boton {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-concrete-dark);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color var(--transition-fast);
+}
+
+.carrito-cantidad-boton:hover {
+  background-color: var(--color-concrete);
+}
+
+.carrito-cantidad-input {
+  width: 44px;
+  text-align: center;
+  padding: 6px 4px;
+  border: 1px solid var(--color-concrete-dark);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.carrito-item-subtotal {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.carrito-item-eliminar {
+  font-size: 0.8rem;
+  color: var(--color-error);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.carrito-item-eliminar:hover {
+  text-decoration: underline;
+}
+
+/* Estado deshabilitado del botón "Añadido ✓" (carrito.js lo activa un instante) */
+.boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .carrito-vacio {
   background-color: var(--color-paper);
   border: 1px dashed var(--color-concrete-dark);
@@ -1143,5 +1230,16 @@ p {
 
   .form-agregar-carrito {
     flex-wrap: wrap;
+  }
+
+  .carrito-item {
+    grid-template-columns: 56px 1fr;
+    row-gap: 8px;
+  }
+
+  .carrito-item-cantidad,
+  .carrito-item-subtotal,
+  .carrito-item-eliminar {
+    grid-column: 2;
   }
 }

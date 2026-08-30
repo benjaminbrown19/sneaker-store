@@ -52,7 +52,7 @@ function crearTarjetaProducto(producto) {
       <p class="card-producto-stock${stockBajo ? ' stock-bajo' : ''}">${textoStock}</p>
       <div class="card-producto-footer">
         <a href="${rutaPaginaDetalle}?codigo=${producto.codigo}" class="boton boton-secundario boton-pequeno">Ver detalle</a>
-        <button type="button" class="boton boton-primario boton-pequeno">Añadir</button>
+        <button type="button" class="boton boton-primario boton-pequeno boton-agregar-carrito" data-codigo="${producto.codigo}">Añadir</button>
       </div>
     </div>
   `;

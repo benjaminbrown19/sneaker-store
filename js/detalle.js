@@ -68,16 +68,25 @@ document.addEventListener('DOMContentLoaded', () => {
       const mensajeStock = document.getElementById('mensaje-stock');
 
       if (!cantidad || cantidad < 1) {
+        mensajeStock.className = 'mensaje-error';
         mensajeStock.textContent = 'Ingresa una cantidad válida.';
         return;
       }
       if (cantidad > producto.stock) {
+        mensajeStock.className = 'mensaje-error';
         mensajeStock.textContent = `Solo quedan ${producto.stock} unidades disponibles.`;
         return;
       }
 
-      mensajeStock.textContent = '';
-      // TODO Etapa 6: guardar { codigo, cantidad } en el carrito (localStorage).
+      const resultado = agregarAlCarrito(producto.codigo, cantidad);
+      if (!resultado.ok) {
+        mensajeStock.className = 'mensaje-error';
+        mensajeStock.textContent = resultado.mensaje;
+        return;
+      }
+
+      mensajeStock.className = 'mensaje-exito';
+      mensajeStock.textContent = 'Producto añadido al carrito.';
     });
   }
 });
