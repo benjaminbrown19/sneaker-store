@@ -83,74 +83,8 @@
         <p class="destacados-subtitle">Los pares que más se están llevando ahora mismo.</p>
 
         <div id="lista-destacados" class="grid-productos">
-          <!-- Etapa 4: estas 4 tarjetas están "quemadas" a mano, tomando los mismos
-               datos que ya viven en data/productos.js. En la Etapa 5, productos.js
-               va a BORRAR este contenido fijo y generarlo dinámicamente con
-               innerHTML/createElement a partir de ese arreglo. -->
-
-          <article class="card-producto">
-            <div class="card-producto-media">
-              <img src="assets/img/producto-snk-001.svg" alt="GRIP Street 90, zapatilla urbana de caña baja en tono asfalto con detalles amarillos" class="card-producto-img">
-            </div>
-            <div class="card-producto-body">
-              <p class="card-producto-categoria">Urbano</p>
-              <h3 class="card-producto-nombre">GRIP Street 90</h3>
-              <p class="card-producto-precio">$54.990</p>
-              <p class="card-producto-stock">Stock: 18 unidades</p>
-              <div class="card-producto-footer">
-                <a href="pages/detalle-producto.html?codigo=SNK-001" class="btn btn-secondary btn-small">Ver detalle</a>
-                <button type="button" class="btn btn-primary btn-small">Añadir</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card-producto">
-            <div class="card-producto-media">
-              <img src="assets/img/producto-snk-002.svg" alt="GRIP Runner X1, zapatilla de running liviana con malla transpirable" class="card-producto-img">
-            </div>
-            <div class="card-producto-body">
-              <p class="card-producto-categoria">Running</p>
-              <h3 class="card-producto-nombre">GRIP Runner X1</h3>
-              <p class="card-producto-precio">$64.990</p>
-              <p class="card-producto-stock">Stock: 12 unidades</p>
-              <div class="card-producto-footer">
-                <a href="pages/detalle-producto.html?codigo=SNK-002" class="btn btn-secondary btn-small">Ver detalle</a>
-                <button type="button" class="btn btn-primary btn-small">Añadir</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card-producto">
-            <div class="card-producto-media">
-              <img src="assets/img/producto-snk-003.svg" alt="GRIP Court Pro, zapatilla de basketball de caña alta" class="card-producto-img">
-            </div>
-            <div class="card-producto-body">
-              <p class="card-producto-categoria">Basketball</p>
-              <h3 class="card-producto-nombre">GRIP Court Pro</h3>
-              <p class="card-producto-precio">$79.990</p>
-              <p class="card-producto-stock stock-bajo">¡Solo 3 unidades!</p>
-              <div class="card-producto-footer">
-                <a href="pages/detalle-producto.html?codigo=SNK-003" class="btn btn-secondary btn-small">Ver detalle</a>
-                <button type="button" class="btn btn-primary btn-small">Añadir</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card-producto">
-            <div class="card-producto-media">
-              <img src="assets/img/producto-snk-004.svg" alt="GRIP Slide Skate, zapatilla de skate con puntera reforzada" class="card-producto-img">
-            </div>
-            <div class="card-producto-body">
-              <p class="card-producto-categoria">Skate</p>
-              <h3 class="card-producto-nombre">GRIP Slide Skate</h3>
-              <p class="card-producto-precio">$49.990</p>
-              <p class="card-producto-stock">Stock: 25 unidades</p>
-              <div class="card-producto-footer">
-                <a href="pages/detalle-producto.html?codigo=SNK-004" class="btn btn-secondary btn-small">Ver detalle</a>
-                <button type="button" class="btn btn-primary btn-small">Añadir</button>
-              </div>
-            </div>
-          </article>
+          <!-- Etapa 5: js/productos.js genera aquí las tarjetas dinámicamente
+               a partir de data/productos.js. Este div queda vacío a propósito. -->
         </div>
 
         <div class="destacados-cta">
@@ -198,6 +132,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="data/productos.js"></script>
   <script src="js/productos.js"></script>
 </body>
 </html>

@@ -49,24 +49,9 @@
       <div class="container">
 
         <article id="detalle-contenido" class="detalle-grid">
-          <!-- Etapa 4: este bloque muestra el producto SNK-001 "quemado" como
-               ejemplo del diseño terminado. En la Etapa 5, detalle.js leerá el
-               parámetro de la URL (ej. ?codigo=SNK-002), buscará el producto
-               correspondiente en data/productos.js y REEMPLAZARÁ este contenido
-               fijo, para que la página muestre el producto que el usuario
-               realmente clickeó (no siempre SNK-001). -->
-
-          <div class="detalle-imagen">
-            <img src="../assets/img/producto-snk-001.svg" alt="GRIP Street 90, zapatilla urbana de caña baja en tono asfalto con detalles amarillos">
-          </div>
-
-          <div class="detalle-info">
-            <p class="card-producto-categoria">Urbano</p>
-            <h1 id="detalle-nombre">GRIP Street 90</h1>
-            <p class="detalle-precio">$54.990</p>
-            <p class="card-producto-stock">Stock disponible: 18 unidades</p>
-            <p class="detalle-descripcion">Zapatilla urbana de caña baja, silueta retro y entresuela acolchada para uso diario en la calle. Corte de gamuza sintética con refuerzos en zonas de alto roce y suela de goma con patrón de tracción GRIP.</p>
-          </div>
+          <!-- Etapa 5: js/detalle.js lee el parámetro ?codigo= de la URL,
+               busca el producto en data/productos.js y genera aquí toda
+               esta sección dinámicamente. Este bloque queda vacío a propósito. -->
         </article>
 
         <form id="form-agregar-carrito" class="form-agregar-carrito">
@@ -119,6 +104,7 @@
   </footer>
 
   <script src="../js/main.js"></script>
+  <script src="../data/productos.js"></script>
   <script src="../js/detalle.js"></script>
 </body>
 </html>

@@ -582,6 +582,34 @@ p {
   outline: none;
 }
 
+/* Aplicada por js/validaciones.js cuando un campo no pasa la validación */
+.campo input.input-invalido,
+.campo select.input-invalido,
+.campo textarea.input-invalido {
+  border-color: var(--color-error);
+}
+
+.campo input.input-invalido:focus,
+.campo select.input-invalido:focus,
+.campo textarea.input-invalido:focus {
+  box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.15);
+}
+
+/* Mensaje neutro reutilizable: "no hay resultados", "producto no encontrado", etc. */
+.mensaje-info {
+  background-color: var(--color-paper);
+  border: 1px dashed var(--color-concrete-dark);
+  border-radius: var(--radius-md);
+  padding: 40px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.mensaje-info a {
+  color: var(--color-court);
+  font-weight: 600;
+}
+
 .campo textarea {
   resize: vertical;
   min-height: 110px;
