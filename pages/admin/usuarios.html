@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de usuarios — Panel administrativo GRIP</title>
+  <meta name="description" content="Listado y gestión de usuarios de GRIP Sneaker Store.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <header class="admin-topbar">
+    <div class="admin-topbar-inner">
+      <a href="../../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+      <p class="admin-badge">Panel administrativo</p>
+      <div class="admin-topbar-actions">
+        <span id="admin-usuario-activo" class="admin-usuario-activo"></span>
+        <a href="../../index.html" class="btn btn-secondary btn-small">Volver a la tienda</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+
+    <nav class="admin-sidebar" aria-label="Navegación administrativa">
+      <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li>
+          <span class="admin-sidebar-grupo">Productos</span>
+          <ul>
+            <li data-rol-permitido="administrador,vendedor"><a href="productos.html">Ver productos</a></li>
+            <li data-rol-permitido="administrador"><a href="producto-crear.html">Crear producto</a></li>
+          </ul>
+        </li>
+        <li data-rol-permitido="administrador">
+          <span class="admin-sidebar-grupo">Usuarios</span>
+          <ul>
+            <li data-rol-permitido="administrador"><a href="usuarios.html" aria-current="page">Ver usuarios</a></li>
+            <li data-rol-permitido="administrador"><a href="usuario-crear.html">Crear usuario</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="admin-main">
+      <div class="admin-main-header">
+        <h1>Gestión de usuarios</h1>
+        <a href="usuario-crear.html" class="btn btn-primary" data-rol-permitido="administrador">+ Crear usuario</a>
+      </div>
+
+      <table class="admin-tabla" id="tabla-usuarios-admin">
+        <caption class="sr-only">Listado de usuarios registrados</caption>
+        <thead>
+          <tr>
+            <th scope="col">RUN</th>
+            <th scope="col">Nombre completo</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Región</th>
+            <th scope="col">Comuna</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-usuarios-body">
+          <!-- Etapa 7: admin-usuarios.js generará aquí una fila por usuario,
+               usando data/usuarios.js -->
+          <tr>
+            <td colspan="6" class="placeholder-js">El listado de usuarios se cargará aquí (Etapa 7 — JavaScript administrativo).</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/roles.js"></script>
+  <script src="../../js/admin-usuarios.js"></script>
+</body>
+</html>

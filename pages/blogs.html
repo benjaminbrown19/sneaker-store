@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — GRIP Sneaker Store</title>
+  <meta name="description" content="Artículos sobre cuidado de zapatillas y cultura sneaker.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html" aria-current="page">Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <div class="container">
+        <h1>Blog GRIP</h1>
+        <p>Consejos de cuidado, tendencias y cultura sneaker.</p>
+      </div>
+    </section>
+
+    <section class="blog-lista" aria-label="Artículos del blog">
+      <div class="container grid-blog">
+
+        <article class="card-blog">
+          <img src="../assets/img/blog-1-cover.svg" alt="Zapatilla blanca siendo limpiada con cepillo suave">
+          <div class="card-blog-body">
+            <p class="card-blog-categoria">Cuidado</p>
+            <h2><a href="blog-1.html">5 errores que arruinan tus zapatillas blancas</a></h2>
+            <p>Evita estos hábitos comunes si quieres que tu par dure mucho más tiempo impecable.</p>
+            <a href="blog-1.html" class="card-blog-link">Leer artículo</a>
+          </div>
+        </article>
+
+        <article class="card-blog">
+          <img src="../assets/img/blog-2-cover.svg" alt="Colección de zapatillas retro exhibidas en una repisa">
+          <div class="card-blog-body">
+            <p class="card-blog-categoria">Cultura</p>
+            <h2><a href="blog-2.html">De la cancha a la calle: la historia del sneaker urbano</a></h2>
+            <p>Cómo las zapatillas deportivas se convirtieron en un ícono de la moda callejera.</p>
+            <a href="blog-2.html" class="card-blog-link">Leer artículo</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="login.html">Iniciar sesión</a></li>
+          <li><a href="registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

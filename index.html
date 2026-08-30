@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRIP — Sneaker Store</title>
+  <meta name="description" content="GRIP Sneaker Store: zapatillas urbanas y deportivas con envío a todo Chile.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="pages/productos.html">Productos</a></li>
+          <li><a href="pages/nosotros.html">Nosotros</a></li>
+          <li><a href="pages/blogs.html">Blog</a></li>
+          <li><a href="pages/contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="pages/login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="pages/carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO / BANNER -->
+    <section class="hero" aria-label="Presentación de la tienda">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>Pisa fuerte. <span class="hero-accent">Pisa GRIP.</span></h1>
+          <p>Zapatillas urbanas y deportivas seleccionadas para quienes no caminan, se mueven. Nueva colección disponible con envío a todo Chile.</p>
+          <a href="pages/productos.html" class="btn btn-primary">Ver colección</a>
+        </div>
+        <div class="hero-image">
+          <img src="assets/img/hero-sneaker.svg" alt="Zapatilla urbana GRIP en fondo de estudio, vista de tres cuartos">
+        </div>
+      </div>
+    </section>
+
+    <!-- INFORMACIÓN DE LA TIENDA -->
+    <section class="info-tienda" aria-labelledby="info-tienda-title">
+      <div class="container info-tienda-grid">
+        <article class="info-card">
+          <img src="assets/icons/icono-envio.svg" alt="" width="40" height="40">
+          <h2>Envío a todo Chile</h2>
+          <p>Despacho a domicilio en 24-72 horas hábiles según tu región.</p>
+        </article>
+        <article class="info-card">
+          <img src="assets/icons/icono-cambio.svg" alt="" width="40" height="40">
+          <h2>Cambios sin drama</h2>
+          <p>30 días para cambiar tu par si el calce no es el correcto.</p>
+        </article>
+        <article class="info-card">
+          <img src="assets/icons/icono-original.svg" alt="" width="40" height="40">
+          <h2>100% originales</h2>
+          <p>Trabajamos solo con distribuidores autorizados.</p>
+        </article>
+      </div>
+      <h2 id="info-tienda-title" class="sr-only">Por qué comprar en GRIP</h2>
+    </section>
+
+    <!-- PRODUCTOS DESTACADOS -->
+    <section class="destacados" aria-labelledby="destacados-title">
+      <div class="container">
+        <h2 id="destacados-title">Destacados de la semana</h2>
+        <p class="destacados-subtitle">Los pares que más se están llevando ahora mismo.</p>
+
+        <div id="lista-destacados" class="grid-productos">
+          <!-- Etapa 4: estas 4 tarjetas están "quemadas" a mano, tomando los mismos
+               datos que ya viven en data/productos.js. En la Etapa 5, productos.js
+               va a BORRAR este contenido fijo y generarlo dinámicamente con
+               innerHTML/createElement a partir de ese arreglo. -->
+
+          <article class="card-producto">
+            <div class="card-producto-media">
+              <img src="assets/img/producto-snk-001.svg" alt="GRIP Street 90, zapatilla urbana de caña baja en tono asfalto con detalles amarillos" class="card-producto-img">
+            </div>
+            <div class="card-producto-body">
+              <p class="card-producto-categoria">Urbano</p>
+              <h3 class="card-producto-nombre">GRIP Street 90</h3>
+              <p class="card-producto-precio">$54.990</p>
+              <p class="card-producto-stock">Stock: 18 unidades</p>
+              <div class="card-producto-footer">
+                <a href="pages/detalle-producto.html?codigo=SNK-001" class="btn btn-secondary btn-small">Ver detalle</a>
+                <button type="button" class="btn btn-primary btn-small">Añadir</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card-producto">
+            <div class="card-producto-media">
+              <img src="assets/img/producto-snk-002.svg" alt="GRIP Runner X1, zapatilla de running liviana con malla transpirable" class="card-producto-img">
+            </div>
+            <div class="card-producto-body">
+              <p class="card-producto-categoria">Running</p>
+              <h3 class="card-producto-nombre">GRIP Runner X1</h3>
+              <p class="card-producto-precio">$64.990</p>
+              <p class="card-producto-stock">Stock: 12 unidades</p>
+              <div class="card-producto-footer">
+                <a href="pages/detalle-producto.html?codigo=SNK-002" class="btn btn-secondary btn-small">Ver detalle</a>
+                <button type="button" class="btn btn-primary btn-small">Añadir</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card-producto">
+            <div class="card-producto-media">
+              <img src="assets/img/producto-snk-003.svg" alt="GRIP Court Pro, zapatilla de basketball de caña alta" class="card-producto-img">
+            </div>
+            <div class="card-producto-body">
+              <p class="card-producto-categoria">Basketball</p>
+              <h3 class="card-producto-nombre">GRIP Court Pro</h3>
+              <p class="card-producto-precio">$79.990</p>
+              <p class="card-producto-stock stock-bajo">¡Solo 3 unidades!</p>
+              <div class="card-producto-footer">
+                <a href="pages/detalle-producto.html?codigo=SNK-003" class="btn btn-secondary btn-small">Ver detalle</a>
+                <button type="button" class="btn btn-primary btn-small">Añadir</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card-producto">
+            <div class="card-producto-media">
+              <img src="assets/img/producto-snk-004.svg" alt="GRIP Slide Skate, zapatilla de skate con puntera reforzada" class="card-producto-img">
+            </div>
+            <div class="card-producto-body">
+              <p class="card-producto-categoria">Skate</p>
+              <h3 class="card-producto-nombre">GRIP Slide Skate</h3>
+              <p class="card-producto-precio">$49.990</p>
+              <p class="card-producto-stock">Stock: 25 unidades</p>
+              <div class="card-producto-footer">
+                <a href="pages/detalle-producto.html?codigo=SNK-004" class="btn btn-secondary btn-small">Ver detalle</a>
+                <button type="button" class="btn btn-primary btn-small">Añadir</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="destacados-cta">
+          <a href="pages/productos.html" class="btn btn-secondary">Ver todo el catálogo</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="pages/productos.html">Productos</a></li>
+          <li><a href="pages/carrito.html">Carrito</a></li>
+          <li><a href="pages/nosotros.html">Nosotros</a></li>
+          <li><a href="pages/blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="pages/login.html">Iniciar sesión</a></li>
+          <li><a href="pages/registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="pages/contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/productos.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta — GRIP Sneaker Store</title>
+  <meta name="description" content="Regístrate en GRIP Sneaker Store para comprar más rápido.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="auth" aria-labelledby="registro-title">
+      <div class="container auth-layout">
+
+        <form id="form-registro" class="form-auth form-auth-ancho" novalidate>
+          <h1 id="registro-title">Crear cuenta</h1>
+          <p class="auth-subtitle">Completa tus datos para comprar más rápido la próxima vez.</p>
+
+          <div class="form-grid">
+
+            <div class="campo">
+              <label for="registro-run">RUN</label>
+              <input
+                type="text"
+                id="registro-run"
+                name="run"
+                placeholder="Sin puntos ni guion, ej: 198765432"
+                minlength="7"
+                maxlength="9"
+                autocomplete="off"
+                required>
+              <p class="mensaje-error" id="error-registro-run" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-nombre">Nombre</label>
+              <input
+                type="text"
+                id="registro-nombre"
+                name="nombre"
+                placeholder="Tu nombre"
+                maxlength="50"
+                autocomplete="given-name"
+                required>
+              <p class="mensaje-error" id="error-registro-nombre" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-apellidos">Apellidos</label>
+              <input
+                type="text"
+                id="registro-apellidos"
+                name="apellidos"
+                placeholder="Tus apellidos"
+                maxlength="100"
+                autocomplete="family-name"
+                required>
+              <p class="mensaje-error" id="error-registro-apellidos" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-correo">Correo electrónico</label>
+              <input
+                type="email"
+                id="registro-correo"
+                name="correo"
+                placeholder="nombre@duoc.cl"
+                maxlength="100"
+                autocomplete="email"
+                required>
+              <p class="mensaje-error" id="error-registro-correo" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-fecha-nacimiento">Fecha de nacimiento</label>
+              <input
+                type="date"
+                id="registro-fecha-nacimiento"
+                name="fechaNacimiento"
+                autocomplete="bday"
+                required>
+              <p class="mensaje-error" id="error-registro-fecha-nacimiento" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-region">Región</label>
+              <select id="registro-region" name="region" autocomplete="off" required>
+                <option value="" selected disabled>Selecciona tu región</option>
+                <!-- Etapa 4: opciones quemadas a mano con las 16 regiones de Chile.
+                     Etapa 5: regiones-comunas.js va a leer data/regiones.js y podría
+                     regenerar este mismo listado dinámicamente si se requiere. -->
+                <option value="arica-parinacota">Arica y Parinacota</option>
+                <option value="tarapaca">Tarapacá</option>
+                <option value="antofagasta">Antofagasta</option>
+                <option value="atacama">Atacama</option>
+                <option value="coquimbo">Coquimbo</option>
+                <option value="valparaiso">Valparaíso</option>
+                <option value="metropolitana">Metropolitana de Santiago</option>
+                <option value="ohiggins">Libertador General Bernardo O'Higgins</option>
+                <option value="maule">Maule</option>
+                <option value="nuble">Ñuble</option>
+                <option value="biobio">Biobío</option>
+                <option value="araucania">La Araucanía</option>
+                <option value="los-rios">Los Ríos</option>
+                <option value="los-lagos">Los Lagos</option>
+                <option value="aysen">Aysén del General Carlos Ibáñez del Campo</option>
+                <option value="magallanes">Magallanes y de la Antártica Chilena</option>
+              </select>
+              <p class="mensaje-error" id="error-registro-region" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-comuna">Comuna</label>
+              <select id="registro-comuna" name="comuna" autocomplete="off" required disabled>
+                <option value="" selected disabled>Primero selecciona una región</option>
+                <!-- Etapa 5: regiones-comunas.js habilitará y llenará este select
+                     según la región elegida -->
+              </select>
+              <p class="mensaje-error" id="error-registro-comuna" role="alert"></p>
+            </div>
+
+            <div class="campo campo-ancho">
+              <label for="registro-direccion">Dirección</label>
+              <input
+                type="text"
+                id="registro-direccion"
+                name="direccion"
+                placeholder="Calle, número, depto/casa"
+                maxlength="300"
+                autocomplete="street-address"
+                required>
+              <p class="mensaje-error" id="error-registro-direccion" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-password">Contraseña</label>
+              <input
+                type="password"
+                id="registro-password"
+                name="password"
+                placeholder="Entre 4 y 10 caracteres"
+                minlength="4"
+                maxlength="10"
+                autocomplete="new-password"
+                required>
+              <p class="mensaje-error" id="error-registro-password" role="alert"></p>
+            </div>
+
+            <div class="campo">
+              <label for="registro-password-confirmar">Confirmar contraseña</label>
+              <input
+                type="password"
+                id="registro-password-confirmar"
+                name="passwordConfirmar"
+                placeholder="Repite tu contraseña"
+                minlength="4"
+                maxlength="10"
+                autocomplete="new-password"
+                required>
+              <p class="mensaje-error" id="error-registro-password-confirmar" role="alert"></p>
+            </div>
+
+          </div>
+
+          <p class="mensaje-exito" id="exito-registro" role="status"></p>
+
+          <button type="submit" class="btn btn-primary">Crear cuenta</button>
+
+          <p class="auth-link">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="login.html">Iniciar sesión</a></li>
+          <li><a href="registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/validaciones.js"></script>
+  <script src="../js/regiones-comunas.js"></script>
+  <script src="../js/registro.js"></script>
+</body>
+</html>

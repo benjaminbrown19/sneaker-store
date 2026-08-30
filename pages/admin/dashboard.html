@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel administrativo — GRIP Sneaker Store</title>
+  <meta name="description" content="Panel administrativo de GRIP Sneaker Store.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <header class="admin-topbar">
+    <div class="admin-topbar-inner">
+      <a href="../../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+      <p class="admin-badge">Panel administrativo</p>
+      <div class="admin-topbar-actions">
+        <span id="admin-usuario-activo" class="admin-usuario-activo"><!-- Etapa 7: roles.js mostrará aquí el nombre y rol de la sesión activa --></span>
+        <a href="../../index.html" class="btn btn-secondary btn-small">Volver a la tienda</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+
+    <nav class="admin-sidebar" aria-label="Navegación administrativa">
+      <ul>
+        <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+        <li>
+          <span class="admin-sidebar-grupo">Productos</span>
+          <ul>
+            <li data-rol-permitido="administrador,vendedor"><a href="productos.html">Ver productos</a></li>
+            <li data-rol-permitido="administrador"><a href="producto-crear.html">Crear producto</a></li>
+          </ul>
+        </li>
+        <li data-rol-permitido="administrador">
+          <span class="admin-sidebar-grupo">Usuarios</span>
+          <ul>
+            <li data-rol-permitido="administrador"><a href="usuarios.html">Ver usuarios</a></li>
+            <li data-rol-permitido="administrador"><a href="usuario-crear.html">Crear usuario</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="admin-main">
+      <h1>Dashboard</h1>
+      <p>Resumen general del inventario y la operación de la tienda.</p>
+
+      <div id="admin-dashboard-resumen" class="admin-cards-resumen">
+        <!-- Etapa 7: admin-productos.js / admin-usuarios.js calcularán aquí
+             los valores reales a partir de data/productos.js y data/usuarios.js -->
+        <article class="admin-card">
+          <p class="admin-card-label">Productos totales</p>
+          <p class="admin-card-valor" id="dashboard-total-productos">—</p>
+        </article>
+        <article class="admin-card">
+          <p class="admin-card-label">Con stock crítico</p>
+          <p class="admin-card-valor" id="dashboard-stock-critico">—</p>
+        </article>
+        <article class="admin-card">
+          <p class="admin-card-label">Usuarios registrados</p>
+          <p class="admin-card-valor" id="dashboard-total-usuarios">—</p>
+        </article>
+      </div>
+
+      <p class="placeholder-js">Las métricas del dashboard se calcularán aquí (Etapa 7 — JavaScript administrativo).</p>
+    </main>
+
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/roles.js"></script>
+  <script src="../../js/admin-productos.js"></script>
+  <script src="../../js/admin-usuarios.js"></script>
+</body>
+</html>

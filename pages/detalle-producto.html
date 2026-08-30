@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del producto — GRIP Sneaker Store</title>
+  <meta name="description" content="Detalle completo de un sneaker GRIP: precio, stock, categoría y descripción.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="productos.html" aria-current="page">Productos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
+      <div class="container">
+        <a href="../index.html">Home</a> / <a href="productos.html">Productos</a> / <span id="breadcrumb-producto">Detalle</span>
+      </div>
+    </nav>
+
+    <section class="detalle-producto" aria-labelledby="detalle-nombre">
+      <div class="container">
+
+        <article id="detalle-contenido" class="detalle-grid">
+          <!-- Etapa 4: este bloque muestra el producto SNK-001 "quemado" como
+               ejemplo del diseño terminado. En la Etapa 5, detalle.js leerá el
+               parámetro de la URL (ej. ?codigo=SNK-002), buscará el producto
+               correspondiente en data/productos.js y REEMPLAZARÁ este contenido
+               fijo, para que la página muestre el producto que el usuario
+               realmente clickeó (no siempre SNK-001). -->
+
+          <div class="detalle-imagen">
+            <img src="../assets/img/producto-snk-001.svg" alt="GRIP Street 90, zapatilla urbana de caña baja en tono asfalto con detalles amarillos">
+          </div>
+
+          <div class="detalle-info">
+            <p class="card-producto-categoria">Urbano</p>
+            <h1 id="detalle-nombre">GRIP Street 90</h1>
+            <p class="detalle-precio">$54.990</p>
+            <p class="card-producto-stock">Stock disponible: 18 unidades</p>
+            <p class="detalle-descripcion">Zapatilla urbana de caña baja, silueta retro y entresuela acolchada para uso diario en la calle. Corte de gamuza sintética con refuerzos en zonas de alto roce y suela de goma con patrón de tracción GRIP.</p>
+          </div>
+        </article>
+
+        <form id="form-agregar-carrito" class="form-agregar-carrito">
+          <div class="campo campo-cantidad">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" min="1" value="1" inputmode="numeric" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-agregar-carrito">Añadir al carrito</button>
+          <p id="mensaje-stock" class="mensaje-error" role="alert"></p>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="login.html">Iniciar sesión</a></li>
+          <li><a href="registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/detalle.js"></script>
+</body>
+</html>

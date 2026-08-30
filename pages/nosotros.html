@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosotros — GRIP Sneaker Store</title>
+  <meta name="description" content="Conoce la historia y los valores de GRIP Sneaker Store.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="nosotros.html" aria-current="page">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <div class="container">
+        <h1>Nosotros</h1>
+      </div>
+    </section>
+
+    <section class="nosotros" aria-labelledby="nosotros-historia-title">
+      <div class="container nosotros-grid">
+        <article>
+          <h2 id="nosotros-historia-title">Nuestra historia</h2>
+          <p>GRIP nació en 2023 como un proyecto entre amigos amantes de las zapatillas, cansados de comprar pares que se veían distintos a como llegaban. Hoy somos una tienda online dedicada exclusivamente a sneakers urbanos, deportivos y de skate, con curaduría propia y atención cercana.</p>
+          <p>Nuestro nombre resume lo que buscamos transmitir: agarre, estabilidad y confianza en cada paso, tanto en la calle como en la cancha.</p>
+        </article>
+        <img src="../assets/img/nosotros-equipo.svg" alt="Equipo de GRIP Sneaker Store organizando zapatillas en el showroom">
+      </div>
+    </section>
+
+    <section class="nosotros-video" aria-labelledby="nosotros-video-title">
+      <div class="container">
+        <h2 id="nosotros-video-title">Así se vive GRIP</h2>
+        <p>Un vistazo rápido a cómo preparamos cada pedido antes de que llegue a tu puerta.</p>
+        <video controls poster="../assets/img/video-poster.svg" width="100%">
+          <source src="../assets/video/nosotros.mp4" type="video/mp4">
+          Tu navegador no soporta la reproducción de video. Puedes
+          <a href="../assets/video/nosotros.mp4">descargar el video aquí</a>.
+        </video>
+      </div>
+    </section>
+
+    <section class="nosotros-valores" aria-labelledby="nosotros-valores-title">
+      <div class="container">
+        <h2 id="nosotros-valores-title">Lo que nos mueve</h2>
+        <div class="valores-grid">
+          <article class="info-card">
+            <h3>Autenticidad</h3>
+            <p>Solo trabajamos con distribuidores autorizados.</p>
+          </article>
+          <article class="info-card">
+            <h3>Cercanía</h3>
+            <p>Atención real, sin respuestas automáticas genéricas.</p>
+          </article>
+          <article class="info-card">
+            <h3>Comunidad</h3>
+            <p>Contenido y eventos para quienes viven la cultura sneaker.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="login.html">Iniciar sesión</a></li>
+          <li><a href="registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

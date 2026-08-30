@@ -1,0 +1,6 @@
+// ==========================================================================
+// GRIP Sneaker Store - admin-productos.js
+// CRUD simulado de productos (crear/editar/alerta stock crítico). (Etapa 7)
+// (Este archivo se desarrollará en la etapa indicada. Por ahora está vacío
+// a propósito para que las páginas HTML puedan referenciarlo sin error 404.)
+// ==========================================================================

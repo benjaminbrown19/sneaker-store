@@ -1,0 +1,7 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Miniatura provisional del video institucional">
+  <rect width="800" height="450" fill="#1B1C20"></rect>
+  <circle cx="400" cy="200" r="46" fill="#F5C518"></circle>
+  <path d="M385 178 L425 200 L385 222 Z" fill="#1B1C20"></path>
+  <text x="50%" y="82%" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="#FAFAF8">Video institucional GRIP</text>
+  <text x="50%" y="90%" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="#8B8D96">Agregar assets/video/nosotros.mp4</text>
+</svg>

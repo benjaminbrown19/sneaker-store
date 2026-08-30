@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto — GRIP Sneaker Store</title>
+  <meta name="description" content="Escríbenos y responderemos a la brevedad.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">GRIP<span class="logo-accent">.</span></a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+          <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
+        <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
+          🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+        </a>
+      </div>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <div class="container">
+        <h1>Contacto</h1>
+        <p>¿Dudas, sugerencias o problemas con tu pedido? Escríbenos.</p>
+      </div>
+    </section>
+
+    <section class="contacto" aria-labelledby="contacto-form-title">
+      <div class="container contacto-layout">
+
+        <form id="form-contacto" class="form-auth" novalidate>
+          <h2 id="contacto-form-title">Envíanos un mensaje</h2>
+
+          <div class="campo">
+            <label for="contacto-nombre">Nombre</label>
+            <input
+              type="text"
+              id="contacto-nombre"
+              name="nombre"
+              placeholder="Tu nombre"
+              maxlength="100"
+              autocomplete="name"
+              required>
+            <p class="mensaje-error" id="error-contacto-nombre" role="alert"></p>
+          </div>
+
+          <div class="campo">
+            <label for="contacto-correo">Correo electrónico</label>
+            <input
+              type="email"
+              id="contacto-correo"
+              name="correo"
+              placeholder="nombre@duoc.cl"
+              maxlength="100"
+              autocomplete="email"
+              required>
+            <p class="mensaje-error" id="error-contacto-correo" role="alert"></p>
+          </div>
+
+          <div class="campo">
+            <label for="contacto-comentario">Comentario</label>
+            <textarea
+              id="contacto-comentario"
+              name="comentario"
+              placeholder="Cuéntanos en qué podemos ayudarte"
+              maxlength="500"
+              rows="5"
+              required></textarea>
+            <p class="mensaje-error" id="error-contacto-comentario" role="alert"></p>
+          </div>
+
+          <p class="mensaje-exito" id="exito-contacto" role="status"></p>
+
+          <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+        </form>
+
+        <aside class="contacto-info" aria-label="Otros medios de contacto">
+          <h2>Otros medios</h2>
+          <address>
+            <p>contacto@grip-sneakers.cl</p>
+            <p>+56 9 1234 5678</p>
+            <p>Valparaíso, Chile</p>
+          </address>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="logo">GRIP<span class="logo-accent">.</span></p>
+        <p>Sneakers con actitud. Envíos a todo Chile.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Enlaces de la tienda">
+        <h2>Tienda</h2>
+        <ul>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+        </ul>
+      </nav>
+
+      <nav class="footer-nav" aria-label="Cuenta">
+        <h2>Cuenta</h2>
+        <ul>
+          <li><a href="login.html">Iniciar sesión</a></li>
+          <li><a href="registro.html">Crear cuenta</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-contact">
+        <h2>Contacto</h2>
+        <address>
+          <a href="contacto.html">Formulario de contacto</a><br>
+          contacto@grip-sneakers.cl
+        </address>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/validaciones.js"></script>
+  <script src="../js/contacto.js"></script>
+</body>
+</html>
