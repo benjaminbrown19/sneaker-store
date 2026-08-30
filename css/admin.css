@@ -48,12 +48,12 @@
   color: #C7C9D1;
 }
 
-.admin-topbar-actions .btn-secondary {
+.admin-topbar-actions .boton-secundario {
   border-color: var(--color-paper);
   color: var(--color-paper);
 }
 
-.admin-topbar-actions .btn-secondary:hover {
+.admin-topbar-actions .boton-secundario:hover {
   background-color: var(--color-paper);
   color: var(--color-asphalt);
 }
@@ -258,7 +258,7 @@
   margin-top: 8px;
 }
 
-.form-admin-acciones .btn {
+.form-admin-acciones .boton {
   flex: 0 0 auto;
 }
 
@@ -316,7 +316,7 @@
     flex-direction: column;
   }
 
-  .form-admin-acciones .btn {
+  .form-admin-acciones .boton {
     width: 100%;
   }
 }
