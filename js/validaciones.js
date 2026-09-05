@@ -34,10 +34,10 @@ function validarEmail(valorOriginal) {
     return 'Ingresa un correo con un formato válido (ej: nombre@dominio.cl).';
   }
 
-  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
+  const dominiosPermitidos = ['duocuc.cl', 'profesor.duocuc.cl', 'gmail.com'];
   const dominio = email.split('@')[1].toLowerCase();
   if (!dominiosPermitidos.includes(dominio)) {
-    return 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.';
+    return 'Solo se aceptan correos @duocuc.cl, @profesor.duocuc.cl o @gmail.com.';
   }
 
   return null;
