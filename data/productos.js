@@ -28,7 +28,7 @@ const productos = [
     stock: 18,
     stockCritico: 5,
     categoria: "urbano",
-    imagen: "assets/img/producto-snk-001.svg"
+    imagen: "assets/img/producto-snk-001.jpg"
   },
   {
     codigo: "SNK-002",
@@ -38,7 +38,7 @@ const productos = [
     stock: 12,
     stockCritico: 4,
     categoria: "running",
-    imagen: "assets/img/producto-snk-002.svg"
+    imagen: "assets/img/producto-snk-002.jpg"
   },
   {
     codigo: "SNK-003",
@@ -48,7 +48,7 @@ const productos = [
     stock: 3,
     stockCritico: 5,
     categoria: "basketball",
-    imagen: "assets/img/producto-snk-003.svg"
+    imagen: "assets/img/producto-snk-003.jpg"
   },
   {
     codigo: "SNK-004",
@@ -58,7 +58,7 @@ const productos = [
     stock: 25,
     stockCritico: 6,
     categoria: "skate",
-    imagen: "assets/img/producto-snk-004.svg"
+    imagen: "assets/img/producto-snk-004.jpg"
   },
   {
     codigo: "SNK-005",
@@ -68,7 +68,7 @@ const productos = [
     stock: 20,
     stockCritico: 5,
     categoria: "urbano",
-    imagen: "assets/img/producto-snk-005.svg"
+    imagen: "assets/img/producto-snk-005.jpg"
   },
   {
     codigo: "SNK-006",
@@ -78,7 +78,7 @@ const productos = [
     stock: 9,
     stockCritico: 4,
     categoria: "running",
-    imagen: "assets/img/producto-snk-006.svg"
+    imagen: "assets/img/producto-snk-006.jpg"
   },
   {
     codigo: "SNK-007",
@@ -88,7 +88,7 @@ const productos = [
     stock: 14,
     stockCritico: 5,
     categoria: "basketball",
-    imagen: "assets/img/producto-snk-007.svg"
+    imagen: "assets/img/producto-snk-007.jpg"
   },
   {
     codigo: "SNK-008",
@@ -98,6 +98,6 @@ const productos = [
     stock: 16,
     stockCritico: 5,
     categoria: "skate",
-    imagen: "assets/img/producto-snk-008.svg"
+    imagen: "assets/img/producto-snk-008.jpg"
   }
 ];
