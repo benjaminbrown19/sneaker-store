@@ -223,6 +223,13 @@
   font-family: var(--font-mono);
 }
 
+.admin-tabla-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
 /* Etiqueta de estado de stock, usada por admin-productos.js (Etapa 7) */
 .badge-stock {
   display: inline-block;
