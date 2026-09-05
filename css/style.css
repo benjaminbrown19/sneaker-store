@@ -1216,7 +1216,15 @@ p {
   }
 
   .header-actions .btn-login {
-    display: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header-actions .btn-carrito {
+    flex-shrink: 0;
   }
 
   .info-tienda-grid,
@@ -1241,5 +1249,16 @@ p {
   .carrito-item-subtotal,
   .carrito-item-eliminar {
     grid-column: 2;
+  }
+}
+
+@media (max-width: 400px) {
+  .card-producto-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-producto-footer .boton {
+    width: 100%;
   }
 }
