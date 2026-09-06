@@ -12,6 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-registro');
   if (!form) return;
 
+  activarValidacionEnVivo({
+    'registro-run': validarRUN,
+    'registro-nombre': (v) => validarTexto(v, { max: 50, nombreCampo: 'El nombre' }),
+    'registro-apellidos': (v) => validarTexto(v, { max: 100, nombreCampo: 'Los apellidos' }),
+    'registro-correo': validarEmail,
+    'registro-direccion': (v) => validarTexto(v, { max: 300, nombreCampo: 'La dirección' }),
+    'registro-password': validarPassword,
+    'registro-password-confirmar': (v) => {
+      const password = document.getElementById('registro-password').value;
+      if (!v) return 'Debes confirmar tu contraseña.';
+      return v === password ? null : 'Las contraseñas no coinciden.';
+    },
+  });
+
   form.addEventListener('submit', (evento) => {
     evento.preventDefault();
 
@@ -46,10 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     validarCampo('registro-nombre', validarTexto(campos.nombre, { max: 50, nombreCampo: 'El nombre' }));
     validarCampo('registro-apellidos', validarTexto(campos.apellidos, { max: 100, nombreCampo: 'Los apellidos' }));
     validarCampo('registro-correo', validarEmail(campos.correo));
-    validarCampo(
-      'registro-fecha-nacimiento',
-      campos.fechaNacimiento ? null : 'La fecha de nacimiento es obligatoria.'
-    );
+    validarCampo('registro-fecha-nacimiento', null); // opcional, según el enunciado
     validarCampo('registro-region', campos.region ? null : 'Selecciona una región.');
     validarCampo('registro-comuna', campos.comuna ? null : 'Selecciona una comuna.');
     validarCampo('registro-direccion', validarTexto(campos.direccion, { max: 300, nombreCampo: 'La dirección' }));

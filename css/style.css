@@ -651,7 +651,36 @@ p {
 
 .auth-layout {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-marca {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-marca-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 12px;
+  background-color: var(--color-asphalt);
+  color: var(--color-safety);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+}
+
+.auth-marca-nombre {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  color: var(--color-asphalt);
+  text-transform: uppercase;
 }
 
 .form-auth {
@@ -708,6 +737,45 @@ p {
 
 .detalle-imagen img {
   border-radius: var(--radius-md);
+}
+
+.detalle-galeria {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.detalle-thumb {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 2px solid var(--color-concrete-dark);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.detalle-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.detalle-thumb:hover {
+  border-color: var(--color-court);
+}
+
+.detalle-thumb.activo {
+  border-color: var(--color-safety);
+}
+
+.productos-relacionados {
+  padding-block: 8px 64px;
+}
+
+.productos-relacionados h2 {
+  margin-bottom: 24px;
 }
 
 .detalle-precio {
@@ -891,6 +959,30 @@ p {
 
 .carrito-resumen .boton {
   width: 100%;
+}
+
+.form-cupon {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 4px;
+}
+
+.form-cupon input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-concrete-dark);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.form-cupon .boton {
+  width: auto;
+  flex-shrink: 0;
+}
+
+#aviso-envio-gratis {
+  margin-bottom: 16px;
 }
 
 /* -------------------- Nosotros -------------------- */
@@ -1213,6 +1305,10 @@ p {
 
   .menu-toggle {
     display: block;
+  }
+
+  .header-actions #link-registro {
+    display: none;
   }
 
   .header-actions .btn-login {

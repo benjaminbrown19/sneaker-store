@@ -70,7 +70,10 @@ function actualizarHeaderSesion() {
   if (!linkLogin) return;
 
   const sesion = obtenerSesionActiva();
-  if (!sesion) return; // se queda tal cual: "Iniciar sesión"
+  if (!sesion) return; // se queda tal cual: "Iniciar sesión" + "Registrar usuario"
+
+  const linkRegistro = document.getElementById('link-registro');
+  if (linkRegistro) linkRegistro.hidden = true;
 
   linkLogin.textContent = `Cerrar sesión (${sesion.nombre})`;
   linkLogin.removeAttribute('href');

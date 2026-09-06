@@ -14,7 +14,25 @@
 // agregar desde las tarjetas), pages/detalle-producto.html (se agrega desde
 // el formulario de cantidad) y pages/carrito.html (donde además se puede
 // ver, editar y vaciar el carrito completo).
+//
+// REGLAS DE NEGOCIO DEL CARRITO (investigadas y definidas por el equipo,
+// según lo pedido en el enunciado):
+//   1. Cupones de descuento: un código válido aplica un % de descuento
+//      sobre el subtotal. Solo se puede tener 1 cupón activo a la vez.
+//   2. Envío gratis: si el subtotal alcanza cierto monto, se avisa al
+//      cliente (no se cobra despacho en este proyecto, así que es
+//      informativo, pero demuestra la regla de negocio).
 // ==========================================================================
+
+const CUPONES_VALIDOS = {
+  GRIP10: 0.10, // 10% de descuento
+  GRIP20: 0.20, // 20% de descuento (ej. clientes frecuentes)
+};
+
+const ENVIO_GRATIS_DESDE = 50000;
+
+let carritoSubtotalActual = 0;
+let cuponAplicado = null; // { codigo, porcentaje } | null
 
 document.addEventListener('DOMContentLoaded', () => {
   // Los botones "Añadir" del catálogo/destacados se generan dinámicamente
@@ -30,15 +48,45 @@ document.addEventListener('DOMContentLoaded', () => {
     mostrarFeedbackBoton(boton, resultado);
   });
 
-  // Botón "Finalizar compra" (solo existe en pages/carrito.html)
+  // Botón "PAGAR" (solo existe en pages/carrito.html)
   const botonFinalizar = document.getElementById('btn-finalizar-compra');
   if (botonFinalizar) {
     botonFinalizar.addEventListener('click', () => {
       if (leerCarritoDesdeStorage().length === 0) return;
       localStorage.removeItem(CARRITO_STORAGE_KEY);
+      cuponAplicado = null;
       actualizarContadorCarrito();
       renderizarCarrito();
       alert('¡Compra simulada realizada con éxito! Gracias por comprar en GRIP.');
+    });
+  }
+
+  // Formulario de cupón de descuento (regla de negocio del carrito)
+  const formCupon = document.getElementById('form-cupon');
+  if (formCupon) {
+    formCupon.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+
+      const input = document.getElementById('cupon-input');
+      const errorCupon = document.getElementById('error-cupon');
+      const codigo = input.value.trim().toUpperCase();
+
+      if (!codigo) {
+        errorCupon.textContent = 'Ingresa un código de cupón.';
+        return;
+      }
+
+      const porcentaje = CUPONES_VALIDOS[codigo];
+      if (porcentaje === undefined) {
+        errorCupon.textContent = 'Ese cupón no es válido.';
+        cuponAplicado = null;
+        recalcularResumen();
+        return;
+      }
+
+      cuponAplicado = { codigo, porcentaje };
+      errorCupon.textContent = '';
+      recalcularResumen();
     });
   }
 
@@ -198,11 +246,42 @@ function renderizarCarrito() {
   conectarControlesDeLineas();
 }
 
-function actualizarResumenCarrito(total) {
+/**
+ * Guarda el subtotal actual y dispara el cálculo del resumen (llamado
+ * cada vez que se renderiza el carrito).
+ */
+function actualizarResumenCarrito(subtotal) {
+  carritoSubtotalActual = subtotal;
+  recalcularResumen();
+}
+
+/**
+ * Calcula el descuento según el cupón activo (si hay uno), el total final,
+ * y si el pedido califica para envío gratis. Se llama tanto al renderizar
+ * el carrito como al aplicar/quitar un cupón, sin necesidad de recorrer
+ * las líneas del carrito de nuevo.
+ */
+function recalcularResumen() {
   const subtotalEl = document.getElementById('carrito-subtotal');
   const totalEl = document.getElementById('carrito-total');
-  if (subtotalEl) subtotalEl.textContent = formatearPrecio(total);
+  const filaDescuento = document.getElementById('fila-descuento');
+  const descuentoEl = document.getElementById('carrito-descuento');
+  const avisoEnvio = document.getElementById('aviso-envio-gratis');
+
+  const descuento = cuponAplicado ? carritoSubtotalActual * cuponAplicado.porcentaje : 0;
+  const total = carritoSubtotalActual - descuento;
+
+  if (subtotalEl) subtotalEl.textContent = formatearPrecio(carritoSubtotalActual);
   if (totalEl) totalEl.textContent = formatearPrecio(total);
+
+  if (filaDescuento && descuentoEl) {
+    filaDescuento.hidden = descuento <= 0;
+    descuentoEl.textContent = `-${formatearPrecio(descuento)}`;
+  }
+
+  if (avisoEnvio) {
+    avisoEnvio.hidden = carritoSubtotalActual < ENVIO_GRATIS_DESDE;
+  }
 }
 
 /**

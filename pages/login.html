@@ -29,6 +29,7 @@
       </nav>
 
       <div class="header-actions">
+        <a href="registro.html" class="btn-login" id="link-registro">Registrar usuario</a>
         <a href="login.html" class="btn-login" aria-current="page" id="link-login">Iniciar sesión</a>
         <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
           🛒 <span id="contador-carrito" class="contador-carrito">0</span>
@@ -43,6 +44,11 @@
     <section class="auth" aria-labelledby="login-title">
       <div class="contenedor auth-layout">
 
+        <div class="auth-marca">
+          <p class="auth-marca-logo" aria-hidden="true">GRIP<span class="logo-accent">.</span></p>
+          <p class="auth-marca-nombre">GRIP Sneaker Store</p>
+        </div>
+
         <form id="form-login" class="form-auth" novalidate>
           <h1 id="login-title">Iniciar sesión</h1>
           <p class="auth-subtitle">Ingresa con tu correo y contraseña.</p>
@@ -53,7 +59,7 @@
               type="email"
               id="login-correo"
               name="correo"
-              placeholder="nombre@duocuc.cl"
+              placeholder="nombre@duoc.cl"
               maxlength="100"
               autocomplete="email"
               required>

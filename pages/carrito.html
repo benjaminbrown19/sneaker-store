@@ -29,6 +29,7 @@
       </nav>
 
       <div class="header-actions">
+        <a href="registro.html" class="btn-login" id="link-registro">Registrar usuario</a>
         <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
         <a href="carrito.html" class="btn-carrito" aria-current="page" aria-label="Ver carrito de compras">
           🛒 <span id="contador-carrito" class="contador-carrito">0</span>
@@ -66,12 +67,26 @@
               <dt>Subtotal</dt>
               <dd id="carrito-subtotal">$0</dd>
             </div>
+            <div class="resumen-fila" id="fila-descuento" hidden>
+              <dt>Descuento</dt>
+              <dd id="carrito-descuento">-$0</dd>
+            </div>
             <div class="resumen-fila resumen-total">
               <dt>Total</dt>
               <dd id="carrito-total">$0</dd>
             </div>
           </dl>
-          <button type="button" class="boton boton-primario" id="btn-finalizar-compra">Finalizar compra</button>
+
+          <form id="form-cupon" class="form-cupon" novalidate>
+            <label for="cupon-input" class="sr-only">Cupón de descuento</label>
+            <input type="text" id="cupon-input" placeholder="Ingresa el cupón de descuento" autocomplete="off">
+            <button type="submit" class="boton boton-secundario boton-pequeno">Aplicar</button>
+          </form>
+          <p class="mensaje-error" id="error-cupon" role="alert"></p>
+
+          <p class="mensaje-exito" id="aviso-envio-gratis" hidden>¡Tu pedido califica para envío gratis!</p>
+
+          <button type="button" class="boton boton-primario" id="btn-finalizar-compra">PAGAR</button>
         </aside>
 
       </div>

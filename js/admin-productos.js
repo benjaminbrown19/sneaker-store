@@ -20,7 +20,31 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarDashboardProductos();
   renderizarTablaProductosAdmin();
   inicializarFormularioProducto();
+  inicializarEliminarProducto();
 });
+
+/**
+ * Un solo listener (delegado) para todos los botones "Eliminar" de la
+ * tabla, registrado UNA vez (la tabla se regenera en cada render, así
+ * que engancharlo a cada botón directamente lo duplicaría).
+ */
+function inicializarEliminarProducto() {
+  const cuerpo = document.getElementById('tabla-productos-body');
+  if (!cuerpo) return;
+
+  cuerpo.addEventListener('click', (evento) => {
+    const boton = evento.target.closest('[data-eliminar-producto]');
+    if (!boton) return;
+
+    if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+
+    const codigo = boton.dataset.eliminarProducto;
+    const catalogo = obtenerCatalogoAdmin().filter((p) => p.codigo !== codigo);
+    guardarCatalogoAdmin(catalogo);
+    renderizarTablaProductosAdmin();
+    renderizarDashboardProductos();
+  });
+}
 
 function obtenerCatalogoAdmin() {
   const guardado = localStorage.getItem(PRODUCTOS_ADMIN_KEY);
@@ -78,7 +102,10 @@ function renderizarTablaProductosAdmin() {
         <span class="badge-stock ${stockBajo ? 'badge-critico' : 'badge-ok'}">${stockBajo ? 'Stock crítico' : 'OK'}</span>
       </td>
       <td>
-        <a href="producto-editar.html?codigo=${producto.codigo}" class="boton boton-secundario boton-pequeno" data-rol-permitido="administrador">Editar</a>
+        <div class="admin-tabla-acciones">
+          <a href="producto-editar.html?codigo=${producto.codigo}" class="boton boton-secundario boton-pequeno" data-rol-permitido="administrador">Editar</a>
+          <button type="button" class="boton boton-peligro boton-pequeno" data-eliminar-producto="${producto.codigo}" data-rol-permitido="administrador">Eliminar</button>
+        </div>
       </td>
     `;
     cuerpo.appendChild(fila);
@@ -95,6 +122,20 @@ function renderizarTablaProductosAdmin() {
 function inicializarFormularioProducto() {
   const formCrear = document.getElementById('form-producto');
   const formEditar = document.getElementById('form-producto-editar');
+
+  if (formCrear || formEditar) {
+    activarValidacionEnVivo({
+      'producto-codigo': (v) => validarTexto(v, { min: 3, nombreCampo: 'El código' }),
+      'producto-nombre': (v) => validarTexto(v, { max: 100, nombreCampo: 'El nombre' }),
+      'producto-descripcion': (v) =>
+        validarTexto(v, { obligatorio: false, max: 500, nombreCampo: 'La descripción' }),
+      'producto-precio': (v) => (v !== '' && Number(v) >= 0 ? null : 'El precio debe ser un número mayor o igual a 0.'),
+      'producto-stock': (v) =>
+        v !== '' && Number.isInteger(Number(v)) && Number(v) >= 0
+          ? null
+          : 'El stock debe ser un número entero mayor o igual a 0.',
+    });
+  }
 
   if (formCrear) inicializarCrearProducto(formCrear);
   if (formEditar) inicializarEditarProducto(formEditar);

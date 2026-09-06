@@ -38,7 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   contenedor.innerHTML = `
     <div class="detalle-imagen">
-      <img src="../${producto.imagen}" alt="${producto.nombre}, ${producto.categoria}">
+      <img src="../${producto.imagen}" alt="${producto.nombre}, ${producto.categoria}" id="detalle-imagen-principal">
+      <!-- Galería de miniaturas: por ahora las 3 apuntan a la misma foto,
+           porque todavía solo tenemos 1 imagen por producto. Cuando se
+           agreguen fotos de otros ángulos, basta con cambiar el src de
+           cada miniatura — el click ya está conectado y funcionando. -->
+      <div class="detalle-galeria" role="group" aria-label="Miniaturas del producto">
+        <button type="button" class="detalle-thumb activo"><img src="../${producto.imagen}" alt="Vista 1 de ${producto.nombre}"></button>
+        <button type="button" class="detalle-thumb"><img src="../${producto.imagen}" alt="Vista 2 de ${producto.nombre}"></button>
+        <button type="button" class="detalle-thumb"><img src="../${producto.imagen}" alt="Vista 3 de ${producto.nombre}"></button>
+      </div>
     </div>
     <div class="detalle-info">
       <p class="card-producto-categoria">${capitalizar(producto.categoria)}</p>
@@ -48,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <p class="detalle-descripcion">${producto.descripcion}</p>
     </div>
   `;
+
+  conectarGaleria();
+  renderizarRelacionados(producto);
 
   // El campo de cantidad no puede pedir más unidades de las que hay en stock.
   const inputCantidad = document.getElementById('cantidad');
@@ -90,3 +102,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+/**
+ * Conecta los clicks de las miniaturas: al hacer click, la imagen
+ * principal cambia por la de la miniatura seleccionada, y se marca esa
+ * miniatura como "activa" visualmente.
+ */
+function conectarGaleria() {
+  const imagenPrincipal = document.getElementById('detalle-imagen-principal');
+  const miniaturas = document.querySelectorAll('.detalle-thumb');
+  if (!imagenPrincipal || miniaturas.length === 0) return;
+
+  miniaturas.forEach((miniatura) => {
+    miniatura.addEventListener('click', () => {
+      const imgMiniatura = miniatura.querySelector('img');
+      imagenPrincipal.src = imgMiniatura.src;
+      miniaturas.forEach((m) => m.classList.remove('activo'));
+      miniatura.classList.add('activo');
+    });
+  });
+}
+
+/**
+ * Muestra hasta 4 productos de la misma categoría (sin incluir el actual)
+ * en la sección "Productos relacionados". Reutiliza crearTarjetaProducto()
+ * de js/productos.js (por eso esa página también carga ese archivo).
+ */
+function renderizarRelacionados(productoActual) {
+  const contenedor = document.getElementById('lista-relacionados');
+  if (!contenedor) return;
+
+  const relacionados = productos
+    .filter((p) => p.categoria === productoActual.categoria && p.codigo !== productoActual.codigo)
+    .slice(0, 4);
+
+  contenedor.innerHTML = '';
+
+  if (relacionados.length === 0) {
+    contenedor.innerHTML = '<p class="mensaje-info">No hay más productos en esta categoría por ahora.</p>';
+    return;
+  }
+
+  relacionados.forEach((p) => contenedor.appendChild(crearTarjetaProducto(p)));
+}

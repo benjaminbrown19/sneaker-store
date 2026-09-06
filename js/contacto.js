@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-contacto');
   if (!form) return;
 
+  activarValidacionEnVivo({
+    'contacto-nombre': (v) => validarTexto(v, { max: 100, nombreCampo: 'El nombre' }),
+    'contacto-correo': validarEmail,
+    'contacto-comentario': (v) => validarTexto(v, { max: 500, nombreCampo: 'El comentario' }),
+  });
+
   form.addEventListener('submit', (evento) => {
     evento.preventDefault();
 

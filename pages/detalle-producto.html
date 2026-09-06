@@ -29,6 +29,7 @@
       </nav>
 
       <div class="header-actions">
+        <a href="registro.html" class="btn-login" id="link-registro">Registrar usuario</a>
         <a href="login.html" class="btn-login" id="link-login">Iniciar sesión</a>
         <a href="carrito.html" class="btn-carrito" aria-label="Ver carrito de compras">
           🛒 <span id="contador-carrito" class="contador-carrito">0</span>
@@ -64,6 +65,15 @@
           <p id="mensaje-stock" class="mensaje-error" role="alert"></p>
         </form>
 
+      </div>
+    </section>
+
+    <section class="productos-relacionados" aria-labelledby="relacionados-title">
+      <div class="contenedor">
+        <h2 id="relacionados-title">Productos relacionados</h2>
+        <div id="lista-relacionados" class="grid-productos">
+          <!-- js/detalle.js genera aquí hasta 4 productos de la misma categoría -->
+        </div>
       </div>
     </section>
   </main>
@@ -108,6 +118,7 @@
   <script src="../js/main.js"></script>
   <script src="../data/productos.js"></script>
   <script src="../js/carrito.js"></script>
+  <script src="../js/productos.js"></script>
   <script src="../js/detalle.js"></script>
 </body>
 </html>

@@ -34,10 +34,10 @@ function validarEmail(valorOriginal) {
     return 'Ingresa un correo con un formato válido (ej: nombre@dominio.cl).';
   }
 
-  const dominiosPermitidos = ['duocuc.cl', 'profesor.duocuc.cl', 'gmail.com', 'hotmail.com', 'outlook.com'];
+  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
   const dominio = email.split('@')[1].toLowerCase();
   if (!dominiosPermitidos.includes(dominio)) {
-    return 'Solo se aceptan correos @duocuc.cl, @profesor.duocuc.cl, @gmail.com, @hotmail.com o @outlook.com.';
+    return 'Solo se aceptan correos @duoc.cl, @profesor.duoc.cl o @gmail.com.';
   }
 
   return null;
@@ -155,4 +155,44 @@ function limpiarError(idInput) {
 
   if (parrafoError) parrafoError.textContent = '';
   if (input) input.classList.remove('input-invalido');
+}
+
+/**
+ * Activa validación EN TIEMPO REAL sobre un conjunto de campos, en vez de
+ * validar solo al hacer submit (RF-025, IE1.2.1, IE1.2.2).
+ *
+ * Recibe un objeto { idDelInput: funcionValidadora }, donde funcionValidadora
+ * es cualquiera de las funciones de arriba (validarEmail, validarRUN, etc.)
+ * o una función flecha personalizada que reciba el valor y devuelva un
+ * mensaje de error (string) o null si es válido.
+ *
+ * Comportamiento:
+ *   - "blur"  -> valida apenas el usuario sale del campo (primer aviso).
+ *   - "input" -> si el campo YA estaba marcado en rojo, revalida mientras
+ *                escribe, para que el error desaparezca apenas lo corrige
+ *                (esto es la "sugerencia dinámica" que pide el enunciado).
+ *
+ * Ejemplo de uso (en login.js):
+ *   activarValidacionEnVivo({
+ *     'login-correo': validarEmail,
+ *     'login-password': validarPassword,
+ *   });
+ */
+function activarValidacionEnVivo(reglas) {
+  Object.entries(reglas).forEach(([idInput, validador]) => {
+    const input = document.getElementById(idInput);
+    if (!input) return;
+
+    const revisar = () => {
+      const mensaje = validador(input.value);
+      if (mensaje) mostrarError(idInput, mensaje);
+      else limpiarError(idInput);
+    };
+
+    input.addEventListener('blur', revisar);
+    input.addEventListener('change', revisar);
+    input.addEventListener('input', () => {
+      if (input.classList.contains('input-invalido')) revisar();
+    });
+  });
 }

@@ -14,6 +14,7 @@ Este documento especifica los requisitos funcionales y no funcionales del sistem
 
 ### 1.2 Ámbito del Sistema
 El sistema comprende:
+
 - Una **tienda pública** donde cualquier visitante puede explorar el catálogo, ver el detalle de un producto, gestionar un carrito de compras, registrarse, iniciar sesión, leer contenido de blog/institucional y enviar un formulario de contacto.
 - Un **panel administrativo** de acceso restringido, con simulación de roles (Administrador, Vendedor, Cliente), gestión de productos y gestión de usuarios.
 
@@ -30,6 +31,7 @@ El sistema **no incluye** backend, base de datos real, pasarela de pago, ni env�
 | `localStorage` | Mecanismo de almacenamiento persistente del navegador, del lado del cliente |
 
 ### 1.4 Referencias
+
 - Documento de evaluación "DSY1104 — Evaluación Parcial N.º 1", Duoc UC.
 - [Documentación de Bootstrap 5.3](https://getbootstrap.com/docs/5.3/)
 - Servicio de Registro Civil e Identificación de Chile — algoritmo de cálculo del dígito verificador del RUN (módulo 11).
@@ -46,6 +48,7 @@ GRIP Sneaker Store es un producto **nuevo e independiente**, sin integración co
 
 ### 2.2 Funciones del Producto
 A alto nivel, el sistema permite:
+
 - Explorar y filtrar un catálogo de productos.
 - Agregar, modificar y eliminar productos de un carrito de compras persistente.
 - Registrar una cuenta de usuario y autenticarse.
@@ -60,16 +63,19 @@ A alto nivel, el sistema permite:
 | Administrador | Personal simulado con control total | Todo lo anterior + gestión completa de productos y usuarios |
 
 ### 2.4 Restricciones
+
 - El proyecto debe implementarse únicamente con HTML5, CSS3, JavaScript Vanilla y Bootstrap (sin otros frameworks de frontend).
 - No existe backend ni base de datos real: toda simulación de autenticación, roles y persistencia de datos ocurre en el cliente (`localStorage`), **sin constituir seguridad real**. Cualquier persona con conocimientos de JavaScript podría alterar dicha información directamente desde las herramientas de desarrollador del navegador.
 - El versionamiento y trabajo colaborativo debe realizarse mediante Git y GitHub.
 
 ### 2.5 Suposiciones y Dependencias
+
 - Se asume que el usuario final accede desde un navegador moderno (Chrome, Firefox o Edge actualizados) con JavaScript habilitado.
 - El proyecto depende de la disponibilidad del CDN de Google Fonts y del CDN de Bootstrap (jsDelivr) para cargar tipografías y estilos; sin conexión a internet, el sitio sigue siendo funcional pero con las fuentes de reemplazo del sistema.
 
 ### 2.6 Requisitos Futuros
 Quedan fuera del alcance de esta versión, pero se identifican como mejoras futuras razonables:
+
 - Integración con un backend real y base de datos persistente.
 - Pasarela de pago real.
 - Subida real de imágenes de producto (actualmente simulada con una imagen genérica).
@@ -88,6 +94,7 @@ Quedan fuera del alcance de esta versión, pero se identifican como mejoras futu
 No aplica — el sistema no interactúa con hardware específico.
 
 #### 3.1.3 Interfaces de Software
+
 - Google Fonts (CDN) para las tipografías Bebas Neue, Work Sans e IBM Plex Mono.
 - Bootstrap 5.3 (CDN, jsDelivr) disponible para uso de componentes en fases futuras del proyecto.
 
@@ -108,7 +115,7 @@ No aplica — el sistema no interactúa con hardware específico.
 | RF-011 | El sistema debe validar el RUN ingresado, incluyendo el dígito verificador (módulo 11). |
 | RF-012 | El sistema debe actualizar dinámicamente el listado de comunas según la región seleccionada. |
 | RF-013 | El sistema debe permitir iniciar sesión mediante correo y contraseña. |
-| RF-014 | El sistema debe validar que el correo pertenezca a los dominios permitidos (`@duocuc.cl`, `@profesor.duocuc.cl`, `@gmail.com`, `@hotmail.com`, `@outlook.com`). |
+| RF-014 | El sistema debe validar que el correo pertenezca a los dominios permitidos (`@duoc.cl`, `@profesor.duoc.cl`, `@gmail.com`). |
 | RF-015 | El sistema debe permitir enviar un formulario de contacto validado. |
 | RF-016 | El sistema debe mostrar un blog con al menos 2 artículos y su detalle. |
 | RF-017 | El sistema debe presentar información institucional de la tienda. |

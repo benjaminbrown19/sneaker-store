@@ -46,11 +46,11 @@ Como no hay backend, cualquier contraseña de 4 a 10 caracteres funciona. El **r
 
 | Correo | Rol |
 |---|---|
-| `ana.perez@duocuc.cl` | Administrador (acceso total al panel) |
-| `carlos.soto@duocuc.cl` | Vendedor (solo ve el catálogo, sin crear/editar) |
+| `ana.perez@duoc.cl` | Administrador (acceso total al panel) |
+| `carlos.soto@duoc.cl` | Vendedor (solo ve el catálogo, sin crear/editar) |
 | Cualquier otro correo válido | Cliente (sin acceso al panel admin) |
 
-Dominios de correo aceptados en todo el sitio: `@duocuc.cl`, `@profesor.duocuc.cl`, `@gmail.com`, `@hotmail.com`, `@outlook.com`.
+Dominios de correo aceptados en todo el sitio: `@duoc.cl`, `@profesor.duoc.cl`, `@gmail.com`.
 
 ---
 

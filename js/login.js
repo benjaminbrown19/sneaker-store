@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-login');
   if (!form) return;
 
+  activarValidacionEnVivo({
+    'login-correo': validarEmail,
+    'login-password': validarPassword,
+  });
+
   form.addEventListener('submit', (evento) => {
     evento.preventDefault();
 
