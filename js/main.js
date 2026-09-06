@@ -20,6 +20,21 @@
 
 const CARRITO_STORAGE_KEY = 'grip_carrito';
 const SESION_STORAGE_KEY = 'grip_sesion';
+const ORDENES_STORAGE_KEY = 'grip_ordenes';
+
+/**
+ * Lee las órdenes (compras simuladas) guardadas en localStorage. Cada
+ * orden se crea en carrito.js cuando alguien hace click en "PAGAR", y
+ * la lee el panel admin (js/admin-ordenes.js) para el rol Vendedor.
+ */
+function leerOrdenesDesdeStorage() {
+  try {
+    const datos = JSON.parse(localStorage.getItem(ORDENES_STORAGE_KEY));
+    return Array.isArray(datos) ? datos : [];
+  } catch (error) {
+    return [];
+  }
+}
 
 /**
  * Lee el carrito guardado en localStorage. Si no existe o está corrupto,

@@ -52,7 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const botonFinalizar = document.getElementById('btn-finalizar-compra');
   if (botonFinalizar) {
     botonFinalizar.addEventListener('click', () => {
-      if (leerCarritoDesdeStorage().length === 0) return;
+      const carritoActual = leerCarritoDesdeStorage();
+      if (carritoActual.length === 0) return;
+
+      guardarOrden(carritoActual);
+
       localStorage.removeItem(CARRITO_STORAGE_KEY);
       cuponAplicado = null;
       actualizarContadorCarrito();
@@ -310,4 +314,41 @@ function conectarControlesDeLineas() {
       eliminarDelCarrito(codigo);
     });
   });
+}
+
+/**
+ * Arma un registro de "orden" (compra simulada) con una foto del carrito
+ * en el momento de pagar (nombre y precio de cada producto quedan
+ * guardados tal cual, para que la orden no cambie si después se edita o
+ * elimina el producto desde el admin). La guarda en localStorage para que
+ * el panel admin la pueda listar — es lo que el rol Vendedor puede ver
+ * según el enunciado ("lista de órdenes y el detalle").
+ */
+function guardarOrden(carritoActual) {
+  const items = carritoActual.map((item) => {
+    const producto = productos.find((p) => p.codigo === item.codigo);
+    return {
+      codigo: item.codigo,
+      nombre: producto ? producto.nombre : item.codigo,
+      cantidad: item.cantidad,
+      precioUnitario: producto ? producto.precio : 0,
+      subtotal: (producto ? producto.precio : 0) * item.cantidad,
+    };
+  });
+
+  const descuento = cuponAplicado ? carritoSubtotalActual * cuponAplicado.porcentaje : 0;
+
+  const nuevaOrden = {
+    id: `ORD-${Date.now()}`,
+    fecha: new Date().toISOString(),
+    items,
+    subtotal: carritoSubtotalActual,
+    cupon: cuponAplicado ? cuponAplicado.codigo : null,
+    descuento,
+    total: carritoSubtotalActual - descuento,
+  };
+
+  const ordenes = leerOrdenesDesdeStorage();
+  ordenes.push(nuevaOrden);
+  localStorage.setItem(ORDENES_STORAGE_KEY, JSON.stringify(ordenes));
 }
