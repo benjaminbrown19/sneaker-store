@@ -105,6 +105,10 @@
           <li><a href="carrito.html">Carrito</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
           <li><a href="blogs.html">Blog</a></li>
+          <li><a href="productos.html?categoria=urbano">Urbano</a></li>
+          <li><a href="productos.html?categoria=running">Running</a></li>
+          <li><a href="productos.html?categoria=basketball">Basketball</a></li>
+          <li><a href="productos.html?categoria=skate">Skate</a></li>
         </ul>
       </nav>
 
@@ -124,6 +128,22 @@
         </address>
       </div>
     </div>
+    <div class="contenedor footer-extra">
+      <div class="footer-pagos">
+        <span class="footer-pagos-label">Medios de pago:</span>
+        <span class="footer-pago-badge">Visa</span>
+        <span class="footer-pago-badge">Mastercard</span>
+        <span class="footer-pago-badge">Transferencia</span>
+      </div>
+
+      <form class="footer-newsletter" id="form-newsletter" novalidate>
+        <label for="newsletter-email" class="sr-only">Correo para el newsletter</label>
+        <input type="email" id="newsletter-email" placeholder="Ingresa tu correo" autocomplete="email">
+        <button type="submit" class="boton boton-primario boton-pequeno">Suscribirme</button>
+      </form>
+    </div>
+    <p class="mensaje-exito footer-newsletter-exito" id="exito-newsletter" role="status"></p>
+
     <p class="footer-copy">&copy; 2026 GRIP Sneaker Store. Proyecto académico DSY1104 — Duoc UC.</p>
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

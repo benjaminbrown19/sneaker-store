@@ -15,6 +15,8 @@
 // ==========================================================================
 
 const USUARIOS_REGISTRADOS_KEY = 'grip_usuarios_registrados';
+const USUARIOS_POR_PAGINA = 5;
+let paginaActualUsuarios = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
   renderizarDashboardUsuarios();
@@ -180,9 +182,16 @@ function renderizarTablaUsuariosAdmin() {
   const cuerpo = document.getElementById('tabla-usuarios-body');
   if (!cuerpo) return;
 
+  const todos = obtenerTodosLosUsuarios();
+  const totalPaginas = Math.max(1, Math.ceil(todos.length / USUARIOS_POR_PAGINA));
+  if (paginaActualUsuarios > totalPaginas) paginaActualUsuarios = totalPaginas;
+
+  const inicio = (paginaActualUsuarios - 1) * USUARIOS_POR_PAGINA;
+  const usuariosPagina = todos.slice(inicio, inicio + USUARIOS_POR_PAGINA);
+
   cuerpo.innerHTML = '';
 
-  obtenerTodosLosUsuarios().forEach((usuario) => {
+  usuariosPagina.forEach((usuario) => {
     const fila = document.createElement('tr');
     fila.innerHTML = `
       <td class="dato-numerico">${usuario.run}</td>
@@ -207,6 +216,11 @@ function renderizarTablaUsuariosAdmin() {
   if (typeof aplicarPermisosVisuales === 'function' && rolActivo) {
     aplicarPermisosVisuales(rolActivo);
   }
+
+  crearControlesPaginacion('paginacion-usuarios', totalPaginas, paginaActualUsuarios, (pagina) => {
+    paginaActualUsuarios = pagina;
+    renderizarTablaUsuariosAdmin();
+  });
 }
 
 /**

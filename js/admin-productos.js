@@ -15,6 +15,8 @@
 // ==========================================================================
 
 const PRODUCTOS_ADMIN_KEY = 'grip_productos_admin';
+const PRODUCTOS_POR_PAGINA = 5;
+let paginaActualProductos = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
   renderizarDashboardProductos();
@@ -85,9 +87,16 @@ function renderizarTablaProductosAdmin() {
   if (!cuerpo) return;
 
   const catalogo = obtenerCatalogoAdmin();
+
+  const totalPaginas = Math.max(1, Math.ceil(catalogo.length / PRODUCTOS_POR_PAGINA));
+  if (paginaActualProductos > totalPaginas) paginaActualProductos = totalPaginas;
+
+  const inicio = (paginaActualProductos - 1) * PRODUCTOS_POR_PAGINA;
+  const catalogoPagina = catalogo.slice(inicio, inicio + PRODUCTOS_POR_PAGINA);
+
   cuerpo.innerHTML = '';
 
-  catalogo.forEach((producto) => {
+  catalogoPagina.forEach((producto) => {
     const stockBajo = typeof producto.stockCritico === 'number' && producto.stock <= producto.stockCritico;
 
     const fila = document.createElement('tr');
@@ -117,6 +126,11 @@ function renderizarTablaProductosAdmin() {
   if (typeof aplicarPermisosVisuales === 'function' && rolActivo) {
     aplicarPermisosVisuales(rolActivo);
   }
+
+  crearControlesPaginacion('paginacion-productos', totalPaginas, paginaActualProductos, (pagina) => {
+    paginaActualProductos = pagina;
+    renderizarTablaProductosAdmin();
+  });
 }
 
 function inicializarFormularioProducto() {

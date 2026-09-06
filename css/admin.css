@@ -243,6 +243,33 @@
   margin-top: 24px;
 }
 
+.admin-paginacion {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.admin-paginacion-boton {
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-concrete-dark);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  transition: background-color var(--transition-fast);
+}
+
+.admin-paginacion-boton:hover {
+  background-color: var(--color-concrete);
+}
+
+.admin-paginacion-boton.activo {
+  background-color: var(--color-safety);
+  border-color: var(--color-safety);
+  font-weight: 600;
+}
+
 /* Etiqueta de estado de stock, usada por admin-productos.js (Etapa 7) */
 .badge-stock {
   display: inline-block;
