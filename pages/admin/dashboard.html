@@ -31,6 +31,7 @@
     <nav class="admin-sidebar" aria-label="Navegación administrativa">
       <ul>
         <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+        <li data-rol-permitido="administrador,vendedor"><a href="ordenes.html">Órdenes</a></li>
         <li>
           <span class="admin-sidebar-grupo">Productos</span>
           <ul>
@@ -67,6 +68,10 @@
           <p class="admin-card-label">Usuarios registrados</p>
           <p class="admin-card-valor" id="dashboard-total-usuarios">—</p>
         </article>
+        <article class="admin-card">
+          <p class="admin-card-label">Órdenes totales</p>
+          <p class="admin-card-valor" id="dashboard-total-ordenes">—</p>
+        </article>
       </div>
     </main>
 
@@ -79,5 +84,6 @@
   <script src="../../js/roles.js"></script>
   <script src="../../js/admin-productos.js"></script>
   <script src="../../js/admin-usuarios.js"></script>
+  <script src="../../js/admin-ordenes.js"></script>
 </body>
 </html>

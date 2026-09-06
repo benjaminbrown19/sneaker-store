@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de productos — Panel administrativo GRIP</title>
-  <meta name="description" content="Listado y gestión de productos de GRIP Sneaker Store.">
+  <title>Órdenes — Panel administrativo GRIP</title>
+  <meta name="description" content="Listado de órdenes (compras simuladas) de GRIP Sneaker Store.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -31,11 +31,11 @@
     <nav class="admin-sidebar" aria-label="Navegación administrativa">
       <ul>
         <li><a href="dashboard.html">Dashboard</a></li>
-        <li data-rol-permitido="administrador,vendedor"><a href="ordenes.html">Órdenes</a></li>
+        <li data-rol-permitido="administrador,vendedor"><a href="ordenes.html" aria-current="page">Órdenes</a></li>
         <li>
           <span class="admin-sidebar-grupo">Productos</span>
           <ul>
-            <li data-rol-permitido="administrador,vendedor"><a href="productos.html" aria-current="page">Ver productos</a></li>
+            <li data-rol-permitido="administrador,vendedor"><a href="productos.html">Ver productos</a></li>
             <li data-rol-permitido="administrador"><a href="producto-crear.html">Crear producto</a></li>
           </ul>
         </li>
@@ -50,27 +50,22 @@
     </nav>
 
     <main class="admin-main">
-      <div class="admin-main-header">
-        <h1>Gestión de productos</h1>
-        <a href="producto-crear.html" class="boton boton-primario" data-rol-permitido="administrador">+ Crear producto</a>
-      </div>
+      <h1>Órdenes</h1>
+      <p>Compras simuladas realizadas desde el carrito ("PAGAR").</p>
 
-      <table class="admin-tabla" id="tabla-productos-admin">
-        <caption class="sr-only">Listado de productos registrados</caption>
+      <table class="admin-tabla" id="tabla-ordenes-admin">
+        <caption class="sr-only">Listado de órdenes</caption>
         <thead>
           <tr>
-            <th scope="col">Código</th>
-            <th scope="col">Imagen</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Categoría</th>
-            <th scope="col">Precio</th>
-            <th scope="col">Stock</th>
-            <th scope="col">Estado</th>
+            <th scope="col">ID</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Unidades</th>
+            <th scope="col">Total</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
-        <tbody id="tabla-productos-body">
-          <!-- js/admin-productos.js genera aquí una fila por producto -->
+        <tbody id="tabla-ordenes-body">
+          <!-- js/admin-ordenes.js genera aquí una fila por orden -->
         </tbody>
       </table>
     </main>
@@ -79,8 +74,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="../../js/main.js"></script>
-  <script src="../../data/productos.js"></script>
   <script src="../../js/roles.js"></script>
-  <script src="../../js/admin-productos.js"></script>
+  <script src="../../js/admin-ordenes.js"></script>
 </body>
 </html>
