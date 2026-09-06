@@ -90,6 +90,14 @@ function renderizarCatalogo() {
   const selectCategoria = document.getElementById('filtro-categoria');
   const selectOrden = document.getElementById('filtro-orden');
 
+  // Si se llegó desde un link del footer tipo productos.html?categoria=running,
+  // preseleccionamos esa categoría en el filtro antes de pintar el catálogo.
+  const categoriaDesdeURL = new URLSearchParams(window.location.search).get('categoria');
+  if (categoriaDesdeURL && selectCategoria) {
+    const opcionExiste = [...selectCategoria.options].some((o) => o.value === categoriaDesdeURL);
+    if (opcionExiste) selectCategoria.value = categoriaDesdeURL;
+  }
+
   const pintarCatalogo = () => {
     let listaFiltrada = [...productos];
 

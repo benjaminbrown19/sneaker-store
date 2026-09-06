@@ -1233,12 +1233,70 @@ p {
   line-height: 1.8;
 }
 
+.footer-extra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-asphalt-soft);
+}
+
+.footer-pagos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-pagos-label {
+  font-size: 0.8rem;
+  color: #8B8D96;
+}
+
+.footer-pago-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-paper);
+  border: 1px solid var(--color-asphalt-soft);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+}
+
+.footer-newsletter {
+  display: flex;
+  gap: 8px;
+}
+
+.footer-newsletter input {
+  padding: 8px 12px;
+  border: 1px solid var(--color-asphalt-soft);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-asphalt-soft);
+  color: var(--color-paper);
+  font-size: 0.85rem;
+  min-width: 180px;
+}
+
+.footer-newsletter input::placeholder {
+  color: #8B8D96;
+}
+
+.footer-newsletter-exito {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.footer-newsletter-exito:empty {
+  display: none;
+}
+
 .footer-copy {
   text-align: center;
   font-size: 0.78rem;
   color: #8B8D96;
   padding-block: 16px 28px;
-  border-top: 1px solid var(--color-asphalt-soft);
 }
 
 /* ==========================================================================
@@ -1332,6 +1390,23 @@ p {
 
   .grid-blog {
     grid-template-columns: 1fr;
+  }
+
+  .footer-extra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-newsletter {
+    flex-direction: column;
+  }
+
+  .footer-newsletter input {
+    min-width: 0;
+  }
+
+  .footer-newsletter-exito {
+    text-align: left;
   }
 
   h1 { font-size: 2.6rem; }

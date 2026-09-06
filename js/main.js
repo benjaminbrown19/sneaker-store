@@ -123,7 +123,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   actualizarContadorCarrito();
   actualizarHeaderSesion();
+  inicializarNewsletter();
 });
+
+/**
+ * Formulario de newsletter del footer (presente en las 11 páginas
+ * públicas). Es una validación simple y autocontenida en main.js —no usa
+ * validarEmail() de validaciones.js porque esa librería no se carga en
+ * TODAS las páginas (ej. blogs.html), y este formulario sí está en todas.
+ */
+function inicializarNewsletter() {
+  const form = document.getElementById('form-newsletter');
+  if (!form) return;
+
+  form.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    const input = document.getElementById('newsletter-email');
+    const mensaje = document.getElementById('exito-newsletter');
+    const formatoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+
+    if (!formatoValido) {
+      mensaje.textContent = 'Ingresa un correo válido.';
+      return;
+    }
+
+    mensaje.textContent = '¡Gracias por suscribirte! Te avisaremos de nuevos lanzamientos.';
+    form.reset();
+  });
+}
 
 /**
  * Formatea un número como precio en pesos chilenos (ej: 54990 -> "$54.990").
@@ -142,4 +170,31 @@ function formatearPrecio(valor) {
 function capitalizar(texto) {
   if (!texto) return '';
   return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+/**
+ * Dibuja botones de paginación (1, 2, 3...) dentro del contenedor indicado.
+ * Si solo hay 1 página, no dibuja nada (no tiene sentido paginar una sola
+ * página). La reutilizan admin-productos.js y admin-usuarios.js.
+ *
+ * @param {string} contenedorId  id del <div> donde van los botones
+ * @param {number} totalPaginas
+ * @param {number} paginaActual
+ * @param {(pagina:number) => void} alCambiarPagina  qué hacer al hacer click
+ */
+function crearControlesPaginacion(contenedorId, totalPaginas, paginaActual, alCambiarPagina) {
+  const contenedor = document.getElementById(contenedorId);
+  if (!contenedor) return;
+
+  contenedor.innerHTML = '';
+  if (totalPaginas <= 1) return;
+
+  for (let pagina = 1; pagina <= totalPaginas; pagina++) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.textContent = String(pagina);
+    boton.className = 'admin-paginacion-boton' + (pagina === paginaActual ? ' activo' : '');
+    boton.addEventListener('click', () => alCambiarPagina(pagina));
+    contenedor.appendChild(boton);
+  }
 }
