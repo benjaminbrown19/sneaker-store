@@ -1,0 +1,11 @@
+<svg viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Imagen provisional del hero de la tienda">
+  <defs>
+  <pattern id="tread-hero" width="26" height="26" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+    <rect width="13.0" height="26" fill="#F5C518" opacity="0.1"></rect>
+  </pattern></defs>
+  <rect width="800" height="1000" fill="#26272D"></rect>
+  <rect width="800" height="1000" fill="url(#tread-hero)"></rect>
+  <text x="50%" y="44%" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="88" letter-spacing="2" fill="#F5C518">GRIP</text>
+  <text x="50%" y="50%" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="26" fill="#FAFAF8">COLECCION 2026</text>
+  <text x="50%" y="95%" text-anchor="middle" font-family="Courier New, monospace" font-size="13" letter-spacing="1" fill="#8B8D96">FOTO PROVISIONAL — REEMPLAZAR POR FOTO REAL DEL PRODUCTO</text>
+</svg>

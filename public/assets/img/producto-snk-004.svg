@@ -1,0 +1,13 @@
+<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Imagen provisional de GRIP Slide Skate">
+  <defs>
+  <pattern id="tread-snk-004" width="26" height="26" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+    <rect width="13.0" height="26" fill="#F5C518" opacity="0.1"></rect>
+  </pattern></defs>
+  <rect width="480" height="480" fill="#1B1C20"></rect>
+  <rect width="480" height="480" fill="url(#tread-snk-004)"></rect>
+  <rect x="18" y="18" width="444" height="444" fill="none" stroke="#F5C518" stroke-width="2" opacity="0.5"></rect>
+  <text x="50%" y="46%" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="46" letter-spacing="2" fill="#F5C518">GRIP</text>
+  <text x="50%" y="56%" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="#FAFAF8">GRIP Slide Skate</text>
+  <text x="50%" y="62%" text-anchor="middle" font-family="Courier New, monospace" font-size="13" letter-spacing="1" fill="#8B8D96">SNK-004 · SKATE</text>
+  <text x="24" y="458" font-family="Courier New, monospace" font-size="11" letter-spacing="1" fill="#8B8D96">FOTO PROVISIONAL — REEMPLAZAR</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Imagen provisional del articulo sobre cultura sneaker">
+  <defs>
+  <pattern id="tread-blog2" width="26" height="26" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+    <rect width="13.0" height="26" fill="#F5C518" opacity="0.1"></rect>
+  </pattern></defs>
+  <rect width="800" height="450" fill="#1B1C20"></rect>
+  <rect width="800" height="450" fill="url(#tread-blog2)"></rect>
+  <text x="50%" y="46%" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="30" fill="#F5C518">CULTURA</text>
+  <text x="50%" y="56%" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="18" fill="#FAFAF8">De la cancha a la calle</text>
+</svg>
