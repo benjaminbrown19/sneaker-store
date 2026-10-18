@@ -7,6 +7,7 @@ import { formatearFecha, formatearPrecio } from '../../utils/formato'
 export default function BoletaOrden({ orden }) {
   const cupon = orden.cupon ? { codigo: orden.cupon } : null
   const entregaDomicilio = orden.entrega.tipo === 'domicilio'
+  const esVendedor = orden.canal === 'vendedor'
 
   return (
     <Card as="article" className="boleta-orden" aria-label={`Boleta de la orden ${orden.id}`}>
@@ -21,7 +22,22 @@ export default function BoletaOrden({ orden }) {
 
         <dl className="boleta-datos">
           <dt>Cliente</dt>
-          <dd>{orden.cliente.nombre} {orden.cliente.apellidos} ({orden.cliente.correo})</dd>
+          <dd>
+            {orden.cliente.nombre} {orden.cliente.apellidos}
+            {orden.cliente.correo ? ` (${orden.cliente.correo})` : ''}
+          </dd>
+          <dt>Canal de venta</dt>
+          <dd>{esVendedor ? 'Venta en tienda, realizada por un vendedor' : 'Compra por internet'}</dd>
+          {esVendedor && (
+            <>
+              <dt>Vendedor</dt>
+              <dd>{orden.vendedor.nombre}</dd>
+              <dt>RUT del vendedor</dt>
+              <dd>{orden.vendedor.run}</dd>
+              <dt>Correo del vendedor</dt>
+              <dd>{orden.vendedor.correo}</dd>
+            </>
+          )}
           <dt>Entrega</dt>
           <dd>
             {entregaDomicilio
@@ -29,7 +45,9 @@ export default function BoletaOrden({ orden }) {
               : 'Retiro en tienda'}
           </dd>
           <dt>Pago</dt>
-          <dd>Tarjeta terminada en {orden.pago.ultimos4}</dd>
+          <dd>
+            {orden.pago.metodo === 'presencial' ? 'Pago en tienda' : `Tarjeta terminada en ${orden.pago.ultimos4}`}
+          </dd>
         </dl>
 
         <Table responsive size="sm" className="align-middle">
