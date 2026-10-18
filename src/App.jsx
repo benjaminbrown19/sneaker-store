@@ -38,9 +38,14 @@ import UsuarioEditar from './pages/admin/UsuarioEditar'
 import HistorialCompras from './pages/admin/HistorialCompras'
 import ReportesGenerales from './pages/admin/ReportesGenerales'
 import Perfil from './pages/admin/Perfil'
+import VentaTienda from './pages/admin/VentaTienda'
 
 function soloAdmin(elemento) {
   return <RutaPorRol roles={['administrador']}>{elemento}</RutaPorRol>
+}
+
+function soloVendedor(elemento) {
+  return <RutaPorRol roles={['vendedor']}>{elemento}</RutaPorRol>
 }
 
 export default function App() {
@@ -70,6 +75,7 @@ export default function App() {
         <Route index element={<Dashboard />} />
         <Route path="ordenes" element={<Ordenes />} />
         <Route path="ordenes/:id" element={<DetalleOrden />} />
+        <Route path="venta" element={soloVendedor(<VentaTienda />)} />
         <Route path="productos" element={<ProductosAdmin />} />
         <Route path="productos/nuevo" element={soloAdmin(<ProductoNuevo />)} />
         <Route path="productos/criticos" element={<ProductosCriticos />} />

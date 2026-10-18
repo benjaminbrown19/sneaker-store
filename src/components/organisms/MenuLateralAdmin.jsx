@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav'
 const ENLACES = [
   { a: '/admin', etiqueta: 'Dashboard', roles: ['administrador', 'vendedor'], exacto: true },
   { a: '/admin/ordenes', etiqueta: 'Órdenes y boletas', roles: ['administrador', 'vendedor'] },
+  { a: '/admin/venta', etiqueta: 'Venta en tienda', roles: ['vendedor'] },
   { a: '/admin/productos', etiqueta: 'Productos', roles: ['administrador', 'vendedor'], exacto: true },
   { a: '/admin/productos/criticos', etiqueta: 'Productos críticos', roles: ['administrador', 'vendedor'] },
   { a: '/admin/productos/reportes', etiqueta: 'Reportes de productos', roles: ['administrador'] },
