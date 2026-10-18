@@ -2,7 +2,7 @@
 ## GRIP Sneaker Store (React)
 
 **Curso:** DSY1104 Desarrollo Fullstack II — Duoc UC
-**Versión:** 2.0 (borrador para revisión del equipo)
+**Versión:** 2.0
 **Integrantes:** Benjamín Brown ([@benjaminbrown19](https://github.com/benjaminbrown19)) · Litzy ([@litzy-1702](https://github.com/litzy-1702))
 **Documento base:** `evaluacion-1/docs/ERS.md` (versión 1.0)
 
