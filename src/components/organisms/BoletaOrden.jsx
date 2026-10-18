@@ -4,6 +4,19 @@ import Insignia from '../atoms/Insignia'
 import ResumenCompra from '../molecules/ResumenCompra'
 import { formatearFecha, formatearPrecio } from '../../utils/formato'
 
+function descripcionPago(pago) {
+  if (pago.metodo === 'efectivo') return 'Efectivo en tienda'
+  if (pago.metodo === 'presencial') return 'Pago en tienda'
+  if (pago.metodo === 'debito') {
+    return `Tarjeta de débito terminada en ${pago.ultimos4}, autorización ${pago.codigoAutorizacion}`
+  }
+  if (pago.metodo === 'credito') {
+    const cuotas = pago.cuotas === 1 ? 'sin cuotas' : `${pago.cuotas} cuotas`
+    return `Tarjeta de crédito terminada en ${pago.ultimos4}, ${cuotas}, autorización ${pago.codigoAutorizacion}`
+  }
+  return `Tarjeta terminada en ${pago.ultimos4}`
+}
+
 export default function BoletaOrden({ orden }) {
   const cupon = orden.cupon ? { codigo: orden.cupon } : null
   const entregaDomicilio = orden.entrega.tipo === 'domicilio'
@@ -45,9 +58,7 @@ export default function BoletaOrden({ orden }) {
               : 'Retiro en tienda'}
           </dd>
           <dt>Pago</dt>
-          <dd>
-            {orden.pago.metodo === 'presencial' ? 'Pago en tienda' : `Tarjeta terminada en ${orden.pago.ultimos4}`}
-          </dd>
+          <dd>{descripcionPago(orden.pago)}</dd>
         </dl>
 
         <Table responsive size="sm" className="align-middle">
