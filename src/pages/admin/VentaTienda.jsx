@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -13,7 +14,7 @@ import { useFormulario } from '../../hooks/useFormulario'
 import { ordenesService } from '../../services/ordenesService'
 import { productosService } from '../../services/productosService'
 import { usuariosService } from '../../services/usuariosService'
-import { formatearPrecio } from '../../utils/formato'
+import { formatearFecha, formatearPrecio } from '../../utils/formato'
 import { validarNumero, validarTexto } from '../../utils/validaciones'
 
 const VENTA_VACIA = {
@@ -21,11 +22,30 @@ const VENTA_VACIA = {
   apellidos: '',
   producto: '',
   cantidad: '1',
+  metodoPago: 'efectivo',
+  ultimos4: '',
+  codigoAutorizacion: '',
+  cuotas: '1',
 }
+
+const OPCIONES_CUOTAS = [1, 2, 3, 6, 9, 12].map((cuotas) => ({
+  valor: String(cuotas),
+  etiqueta: cuotas === 1 ? 'Sin cuotas' : `${cuotas} cuotas`,
+}))
 
 const reglas = {
   nombre: (valor) => validarTexto(valor, { max: 50, nombreCampo: 'El nombre del cliente' }),
   apellidos: (valor) => validarTexto(valor, { max: 100, nombreCampo: 'Los apellidos del cliente' }),
+  ultimos4: (valor, todos) => {
+    if (todos.metodoPago === 'efectivo') return null
+    return /^[0-9]{4}$/.test((valor || '').trim()) ? null : 'Ingresa los 4 últimos dígitos de la tarjeta.'
+  },
+  codigoAutorizacion: (valor, todos) => {
+    if (todos.metodoPago === 'efectivo') return null
+    return /^[0-9]{4,8}$/.test((valor || '').trim())
+      ? null
+      : 'El código de autorización debe tener entre 4 y 8 dígitos.'
+  },
 }
 
 export default function VentaTienda() {
@@ -33,6 +53,7 @@ export default function VentaTienda() {
   const { valores, campo, cambiar, validarTodo, reiniciar } = useFormulario(VENTA_VACIA, reglas)
   const [lineas, setLineas] = useState([])
   const [aviso, setAviso] = useState(null)
+  const [comprobante, setComprobante] = useState(null)
 
   const vendedor = usuariosService.buscarPorCorreo(sesion.correo)
   const opcionesProducto = productosService
@@ -97,6 +118,7 @@ export default function VentaTienda() {
   function registrarVenta(evento) {
     evento.preventDefault()
     setAviso(null)
+    setComprobante(null)
     if (!validarTodo()) return
     if (lineas.length === 0) {
       setAviso({ variante: 'danger', texto: 'Agrega al menos un producto a la venta.' })
@@ -112,6 +134,17 @@ export default function VentaTienda() {
     }))
     const nombreCliente = valores.nombre.trim()
     const apellidosCliente = valores.apellidos.trim()
+    const metodoPago = valores.metodoPago
+
+    const pago =
+      metodoPago === 'efectivo'
+        ? { metodo: 'efectivo' }
+        : {
+            metodo: metodoPago,
+            ultimos4: valores.ultimos4.trim(),
+            codigoAutorizacion: valores.codigoAutorizacion.trim(),
+            ...(metodoPago === 'credito' ? { cuotas: Number(valores.cuotas) } : {}),
+          }
 
     const orden = ordenesService.registrar({
       canal: 'vendedor',
@@ -122,7 +155,7 @@ export default function VentaTienda() {
       },
       cliente: { nombre: nombreCliente, apellidos: apellidosCliente, correo: null },
       entrega: { tipo: 'retiro' },
-      pago: { metodo: 'presencial', ultimos4: null },
+      pago,
       items,
       cupon: null,
       subtotal: total,
@@ -135,6 +168,7 @@ export default function VentaTienda() {
     productosService.descontarStock(items)
     setLineas([])
     reiniciar()
+    if (metodoPago !== 'efectivo') setComprobante(orden)
     setAviso({ variante: 'success', texto: `Venta ${orden.id} registrada para ${nombreCliente} ${apellidosCliente}.` })
   }
 
@@ -145,6 +179,39 @@ export default function VentaTienda() {
         Vendedor: {vendedor.nombre} {vendedor.apellidos} · RUT {vendedor.run}
       </p>
       {aviso && <Mensaje variante={aviso.variante}>{aviso.texto}</Mensaje>}
+
+      {comprobante && (
+        <Card as="section" className="mb-4" aria-label="Comprobante de pago con tarjeta">
+          <Card.Body>
+            <div className="d-flex justify-content-between flex-wrap gap-2 mb-3">
+              <h2 className="h5 mb-0">Comprobante de pago con tarjeta</h2>
+              <Boton variante="secundario" tamano="sm" onClick={() => setComprobante(null)}>
+                Cerrar comprobante
+              </Boton>
+            </div>
+            <dl className="boleta-datos mb-0">
+              <dt>Orden</dt>
+              <dd className="dato-mono">{comprobante.id}</dd>
+              <dt>Hora</dt>
+              <dd>{formatearFecha(comprobante.fecha)}</dd>
+              <dt>Cliente</dt>
+              <dd>{comprobante.cliente.nombre} {comprobante.cliente.apellidos}</dd>
+              <dt>Tipo de tarjeta</dt>
+              <dd>
+                {comprobante.pago.metodo === 'debito'
+                  ? 'Débito'
+                  : `Crédito, ${comprobante.pago.cuotas === 1 ? 'sin cuotas' : `${comprobante.pago.cuotas} cuotas`}`}
+              </dd>
+              <dt>Últimos 4 dígitos</dt>
+              <dd className="dato-mono">**** {comprobante.pago.ultimos4}</dd>
+              <dt>Código de autorización</dt>
+              <dd className="dato-mono">{comprobante.pago.codigoAutorizacion}</dd>
+              <dt>Monto pagado</dt>
+              <dd className="dato-mono">{formatearPrecio(comprobante.total)}</dd>
+            </dl>
+          </Card.Body>
+        </Card>
+      )}
 
       <Form onSubmit={registrarVenta} noValidate aria-label="Formulario de venta en tienda">
         <Row className="g-4">
@@ -187,6 +254,66 @@ export default function VentaTienda() {
                 </Boton>
               </Col>
             </Row>
+
+            <h2 className="h5 mt-4">Forma de pago</h2>
+            <div className="mb-3" role="radiogroup" aria-label="Forma de pago">
+              <Form.Check
+                type="radio"
+                id="pago-efectivo"
+                name="metodoPago"
+                label="Efectivo"
+                checked={valores.metodoPago === 'efectivo'}
+                onChange={() => cambiar('metodoPago', 'efectivo')}
+              />
+              <Form.Check
+                type="radio"
+                id="pago-debito"
+                name="metodoPago"
+                label="Débito"
+                checked={valores.metodoPago === 'debito'}
+                onChange={() => cambiar('metodoPago', 'debito')}
+              />
+              <Form.Check
+                type="radio"
+                id="pago-credito"
+                name="metodoPago"
+                label="Crédito"
+                checked={valores.metodoPago === 'credito'}
+                onChange={() => cambiar('metodoPago', 'credito')}
+              />
+            </div>
+
+            {valores.metodoPago !== 'efectivo' && (
+              <Row>
+                <Col md={6}>
+                  <CampoFormulario
+                    {...campo('ultimos4', 'venta-ultimos4')}
+                    etiqueta="Últimos 4 dígitos de la tarjeta"
+                    inputMode="numeric"
+                    maxLength={4}
+                  />
+                </Col>
+                <Col md={6}>
+                  <CampoFormulario
+                    {...campo('codigoAutorizacion', 'venta-autorizacion')}
+                    etiqueta="Código de autorización"
+                    inputMode="numeric"
+                    maxLength={8}
+                    ayuda="Código que entrega el POS al aprobar la compra."
+                  />
+                </Col>
+              </Row>
+            )}
+
+            {valores.metodoPago === 'credito' && (
+              <CampoFormulario
+                id="venta-cuotas"
+                etiqueta="Cuotas"
+                opciones={OPCIONES_CUOTAS}
+                valor={valores.cuotas}
+                onChange={(evento) => cambiar('cuotas', evento.target.value)}
+              />
+            )}
           </Col>
 
           <Col lg={5}>
