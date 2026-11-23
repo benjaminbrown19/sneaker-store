@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
@@ -11,7 +11,8 @@ import CampoFormulario from '../../components/molecules/CampoFormulario'
 import ResumenCompra from '../../components/molecules/ResumenCompra'
 import { useSesion } from '../../context/SesionContext'
 import { useFormulario } from '../../hooks/useFormulario'
-import { ordenesService } from '../../services/ordenesService'
+import { ordenesApi } from '../../services/ordenesApi'
+import { productosApi } from '../../services/productosApi'
 import { productosService } from '../../services/productosService'
 import { usuariosService } from '../../services/usuariosService'
 import { formatearFecha, formatearPrecio } from '../../utils/formato'
@@ -51,14 +52,27 @@ const reglas = {
 export default function VentaTienda() {
   const { sesion } = useSesion()
   const { valores, campo, cambiar, validarTodo, reiniciar } = useFormulario(VENTA_VACIA, reglas)
+  const [productos, setProductos] = useState(() => productosService.listar())
   const [lineas, setLineas] = useState([])
   const [aviso, setAviso] = useState(null)
   const [comprobante, setComprobante] = useState(null)
+  const [procesando, setProcesando] = useState(false)
 
-  const vendedor = usuariosService.buscarPorCorreo(sesion.correo)
-  const opcionesProducto = productosService
-    .listar()
-    .filter((producto) => producto.stock > 0)
+  useEffect(() => {
+    let activo = true
+    productosApi.listar()
+      .then((datos) => {
+        if (activo) setProductos(datos)
+      })
+      .catch((error) => {
+        if (activo) setAviso({ variante: 'warning', texto: `${error.message} Se muestran los productos guardados localmente.` })
+      })
+    return () => { activo = false }
+  }, [])
+
+  const vendedor = usuariosService.buscarPorCorreo(sesion?.correo)
+  const opcionesProducto = productos
+    .filter((producto) => Number(producto.stock) > 0)
     .map((producto) => ({
       valor: producto.codigo,
       etiqueta: `${producto.nombre} (${producto.stock} disponibles)`,
@@ -77,7 +91,7 @@ export default function VentaTienda() {
 
   function agregarProducto() {
     setAviso(null)
-    const producto = productosService.obtener(valores.producto)
+    const producto = productos.find((item) => item.codigo === valores.producto)
     const errorCantidad = validarNumero(valores.cantidad, { min: 1, entero: true, nombreCampo: 'La cantidad' })
 
     if (!producto) {
@@ -115,61 +129,69 @@ export default function VentaTienda() {
     setLineas(lineas.filter((linea) => linea.codigo !== codigo))
   }
 
-  function registrarVenta(evento) {
+  async function registrarVenta(evento) {
     evento.preventDefault()
     setAviso(null)
     setComprobante(null)
-    if (!validarTodo()) return
+    if (!validarTodo() || procesando) return
     if (lineas.length === 0) {
       setAviso({ variante: 'danger', texto: 'Agrega al menos un producto a la venta.' })
       return
     }
 
-    const items = lineas.map((linea) => ({
-      codigo: linea.codigo,
-      nombre: linea.nombre,
-      cantidad: linea.cantidad,
-      precioUnitario: linea.precioUnitario,
-      subtotal: linea.precioUnitario * linea.cantidad,
-    }))
-    const nombreCliente = valores.nombre.trim()
-    const apellidosCliente = valores.apellidos.trim()
     const metodoPago = valores.metodoPago
+    const pago = metodoPago === 'efectivo'
+      ? { metodo: 'efectivo' }
+      : {
+          metodo: metodoPago,
+          ultimos4: valores.ultimos4.trim(),
+          codigoAutorizacion: valores.codigoAutorizacion.trim(),
+          ...(metodoPago === 'credito' ? { cuotas: Number(valores.cuotas) } : {}),
+        }
 
-    const pago =
-      metodoPago === 'efectivo'
-        ? { metodo: 'efectivo' }
-        : {
-            metodo: metodoPago,
-            ultimos4: valores.ultimos4.trim(),
-            codigoAutorizacion: valores.codigoAutorizacion.trim(),
-            ...(metodoPago === 'credito' ? { cuotas: Number(valores.cuotas) } : {}),
-          }
+    setProcesando(true)
+    try {
+      const orden = await ordenesApi.crear({
+        canal: 'vendedor',
+        vendedor: {
+          nombre: `${vendedor.nombre} ${vendedor.apellidos}`,
+          run: vendedor.run,
+          correo: vendedor.correo,
+        },
+        cliente: {
+          nombre: valores.nombre.trim(),
+          apellidos: valores.apellidos.trim(),
+          correo: null,
+        },
+        entrega: { tipo: 'retiro' },
+        pago,
+        cupon: null,
+        items: lineas.map((linea) => ({
+          codigo: linea.codigo,
+          cantidad: linea.cantidad,
+        })),
+      })
 
-    const orden = ordenesService.registrar({
-      canal: 'vendedor',
-      vendedor: {
-        nombre: `${vendedor.nombre} ${vendedor.apellidos}`,
-        run: vendedor.run,
-        correo: vendedor.correo,
-      },
-      cliente: { nombre: nombreCliente, apellidos: apellidosCliente, correo: null },
-      entrega: { tipo: 'retiro' },
-      pago,
-      items,
-      cupon: null,
-      subtotal: total,
-      descuento: 0,
-      envio: 0,
-      total,
-      estado: 'pagada',
-    })
+      let avisoActualizacion = ''
+      try {
+        const catalogo = await productosApi.listar()
+        setProductos(catalogo)
+      } catch {
+        avisoActualizacion = ' La venta se guardó, pero no se pudo refrescar el catálogo; actualiza la página.'
+      }
 
-    productosService.descontarStock(items)
-    setLineas([])
-    reiniciar()
-    if (metodoPago !== 'efectivo') setComprobante(orden)
-    setAviso({ variante: 'success', texto: `Venta ${orden.id} registrada para ${nombreCliente} ${apellidosCliente}.` })
+      setLineas([])
+      reiniciar()
+      if (metodoPago !== 'efectivo') setComprobante(orden)
+      setAviso({
+        variante: avisoActualizacion ? 'warning' : 'success',
+        texto: `Venta ${orden.id} registrada para ${orden.cliente.nombre} ${orden.cliente.apellidos}.${avisoActualizacion}`,
+      })
+    } catch (error) {
+      setAviso({ variante: 'danger', texto: error.message || 'No se pudo registrar la venta.' })
+    } finally {
+      setProcesando(false)
+    }
   }
 
   return (
@@ -349,8 +371,8 @@ export default function VentaTienda() {
                 </Table>
               )}
               <ResumenCompra resumen={{ subtotal: total, descuento: 0, envio: 0, total }} cupon={null} />
-              <Boton tipo="submit" tamano="lg" className="w-100 mt-3">
-                Registrar venta
+              <Boton tipo="submit" tamano="lg" className="w-100 mt-3" deshabilitado={procesando}>
+                {procesando ? 'Registrando venta…' : 'Registrar venta'}
               </Boton>
             </aside>
           </Col>

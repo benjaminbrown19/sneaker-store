@@ -1,7 +1,8 @@
-import { screen, fireEvent, within } from '@testing-library/react'
+import { screen, fireEvent, within, waitFor } from '@testing-library/react'
 import App from '../App'
 import { renderConProveedores } from './utilidades'
 import { productosService } from '../services/productosService'
+import { productosApi } from '../services/productosApi'
 
 function iniciarSesionComo(rol, nombre, correo) {
   localStorage.setItem('grip_sesion', JSON.stringify({ id: 'USR-X', correo, nombre, rol }))
@@ -39,7 +40,9 @@ describe('Panel administrativo (integración)', () => {
     iniciarSesionComo('administrador', 'Ana', 'ana.perez@duoc.cl')
     renderConProveedores(<App />, '/admin/productos/nuevo')
 
-    const escribir = (etiqueta, valor) => fireEvent.change(screen.getByLabelText(etiqueta), { target: { value: valor } })
+    const escribir = (etiqueta, valor) =>
+      fireEvent.change(screen.getByLabelText(etiqueta), { target: { value: valor } })
+
     escribir('Código', 'SNK-077')
     escribir('Nombre', 'GRIP Integración')
     escribir('Precio (CLP)', '45000')
@@ -53,18 +56,29 @@ describe('Panel administrativo (integración)', () => {
     expect(screen.getAllByText('Crítico').length).toBeGreaterThan(1)
   })
 
-  it('elimina un producto solo si el administrador confirma', async () => {
+  it('solo solicita eliminar un producto cuando el administrador confirma', async () => {
     iniciarSesionComo('administrador', 'Ana', 'ana.perez@duoc.cl')
     const confirmar = spyOn(window, 'confirm').and.returnValues(false, true)
+    const eliminarApi = spyOn(productosApi, 'eliminar').and.returnValue(Promise.resolve(null))
     renderConProveedores(<App />, '/admin/productos')
 
-    const fila = screen.getByText('GRIP Skate'.replace('Skate', 'Slide Skate')).closest('tr')
-    fireEvent.click(within(fila).getByRole('button', { name: 'Eliminar' }))
-    expect(productosService.obtener('SNK-004')).not.toBeNull()
+    const textoProducto = await screen.findByText('GRIP Slide Skate')
+    const fila = textoProducto.closest('tr')
+    const botonEliminar = within(fila).getByRole('button', { name: 'Eliminar' })
 
-    fireEvent.click(within(fila).getByRole('button', { name: 'Eliminar' }))
+    // Si el administrador cancela, la API no debe recibir la solicitud.
+    fireEvent.click(botonEliminar)
+    expect(confirmar).toHaveBeenCalledTimes(1)
+    expect(eliminarApi).not.toHaveBeenCalled()
+    expect(screen.getByText('GRIP Slide Skate')).toBeInTheDocument()
+
+    // Si confirma, la pantalla debe enviar el código correcto al servicio REST.
+    fireEvent.click(botonEliminar)
     expect(confirmar).toHaveBeenCalledTimes(2)
-    expect(productosService.obtener('SNK-004')).toBeNull()
+    await waitFor(() => {
+      expect(eliminarApi).toHaveBeenCalledTimes(1)
+      expect(eliminarApi).toHaveBeenCalledWith('SNK-004')
+    })
   })
 
   it('no deja eliminar una categoría que tiene productos asociados', () => {

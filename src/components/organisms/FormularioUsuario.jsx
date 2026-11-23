@@ -45,7 +45,7 @@ function crearReglas({ conPassword, conTipo, runBloqueado }) {
     reglas.tipoUsuario = (valor) => (valor ? null : 'Selecciona un tipo de usuario.')
   }
   if (conPassword) {
-    reglas.password = validarPassword
+    reglas.password = (v) => !v || v.length < 8 ? 'La contraseña debe tener al menos 8 caracteres.' : null
     reglas.passwordConfirmar = (valor, todos) => {
       if (!valor) return 'Debes confirmar tu contraseña.'
       return valor === todos.password ? null : 'Las contraseñas no coinciden.'
@@ -69,13 +69,13 @@ export default function FormularioUsuario({
   const { valores, campo, cambiar, validarTodo, reiniciar } = formulario
   const [resultado, setResultado] = useState(null)
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault()
     setResultado(null)
     if (!validarTodo()) return
 
     const { passwordConfirmar, ...datos } = valores
-    const respuesta = onGuardar(datos)
+    const respuesta = await onGuardar(datos)
     setResultado(respuesta)
     if (respuesta.ok && reiniciarAlGuardar) reiniciar(USUARIO_VACIO)
   }
@@ -129,7 +129,7 @@ export default function FormularioUsuario({
         {conPassword && (
           <>
             <Col md={6}>
-              <CampoFormulario {...campo('password', 'usuario-password')} etiqueta="Contraseña" tipo="password" ayuda="Entre 4 y 10 caracteres." />
+              <CampoFormulario {...campo('password', 'usuario-password')} etiqueta="Contraseña" tipo="password" ayuda="Mínimo 8 caracteres." />
             </Col>
             <Col md={6}>
               <CampoFormulario {...campo('passwordConfirmar', 'usuario-password-confirmar')} etiqueta="Confirmar contraseña" tipo="password" />

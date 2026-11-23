@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import App from '../App'
 import { renderConProveedores } from './utilidades'
-import { ordenesService } from '../services/ordenesService'
+import { ordenesApi } from '../services/ordenesApi'
 
 function iniciarSesionComo(rol) {
   const datos = {
@@ -29,10 +29,12 @@ describe('Navegación de la tienda (integración)', () => {
   ]
 
   rutasPublicas.forEach(([ruta, titulo]) => {
-    it(`la ruta ${ruta} muestra su encabezado principal`, () => {
+    it(`la ruta ${ruta} muestra su encabezado principal`, async () => {
       renderConProveedores(<App />, ruta)
 
-      expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
+      expect(
+        await screen.findByRole('heading', { level: 1, name: titulo }),
+      ).toBeInTheDocument()
     })
   })
 
@@ -85,38 +87,45 @@ describe('Navegación del panel administrativo (integración)', () => {
   ]
 
   rutasAdmin.forEach(([ruta, titulo]) => {
-    it(`el administrador ve ${ruta}`, () => {
+    it(`el administrador ve ${ruta}`, async () => {
       iniciarSesionComo('administrador')
       renderConProveedores(<App />, ruta)
 
-      expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeInTheDocument()
+      expect(
+        await screen.findByRole('heading', { level: 1, name: titulo }),
+      ).toBeInTheDocument()
     })
   })
 
-  it('muestra el detalle de una orden con su boleta', () => {
+  it('muestra el detalle de una orden con su boleta', async () => {
     iniciarSesionComo('administrador')
-    const orden = ordenesService.registrar({
+    const orden = await ordenesApi.crear({
+      canal: 'online',
       cliente: { nombre: 'Valentina', apellidos: 'Muñoz', correo: 'valentina.munoz@gmail.com' },
       entrega: { tipo: 'retiro' },
       pago: { metodo: 'tarjeta', ultimos4: '4242' },
-      items: [{ codigo: 'SNK-001', nombre: 'GRIP Street 90', cantidad: 1, precioUnitario: 54990, subtotal: 54990 }],
+      items: [{ codigo: 'SNK-001', cantidad: 1 }],
       cupon: null,
-      subtotal: 54990,
-      descuento: 0,
-      envio: 0,
-      total: 54990,
-      estado: 'pagada',
     })
     renderConProveedores(<App />, `/admin/ordenes/${orden.id}`)
 
     expect(screen.getByRole('heading', { level: 1, name: 'Boleta' })).toBeInTheDocument()
-    expect(screen.getByText('Tarjeta terminada en 4242')).toBeInTheDocument()
+    expect(await screen.findByText('Tarjeta terminada en 4242')).toBeInTheDocument()
   })
 
-  it('el vendedor puede ver productos críticos y su perfil', () => {
+  it('el vendedor puede ver su perfil, pero no acceder a productos críticos', async () => {
     iniciarSesionComo('vendedor')
-    renderConProveedores(<App />, '/admin/perfil')
+    const { unmount } = renderConProveedores(<App />, '/admin/perfil')
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Mi perfil' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Mi perfil' }),
+    ).toBeInTheDocument()
+    unmount()
+
+    renderConProveedores(<App />, '/admin/productos/criticos')
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Productos' }),
+    ).toBeInTheDocument()
   })
 })

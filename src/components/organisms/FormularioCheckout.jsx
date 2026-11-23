@@ -36,6 +36,7 @@ export default function FormularioCheckout({
   tipoEntrega,
   onCambiarTipoEntrega,
   onPagar,
+  procesando = false,
 }) {
   const { valores, campo, cambiar, validarTodo } = useFormulario(
     { ...CHECKOUT_VACIO, ...valoresIniciales },
@@ -106,7 +107,7 @@ export default function FormularioCheckout({
         ayuda="Simulación: una tarjeta terminada en 0000 será rechazada."
       />
 
-      <Boton tipo="submit" tamano="lg" className="w-100">Pagar ahora</Boton>
+      <Boton tipo="submit" tamano="lg" className="w-100" deshabilitado={procesando}>{procesando ? 'Procesando compra…' : 'Pagar ahora'}</Boton>
     </Form>
   )
 }

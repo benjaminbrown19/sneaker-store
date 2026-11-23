@@ -2,11 +2,11 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Mensaje from '../../components/atoms/Mensaje'
 import BoletaOrden from '../../components/organisms/BoletaOrden'
-import { ordenesService } from '../../services/ordenesService'
 
 export default function PagoExitoso() {
   const { state } = useLocation()
-  const orden = state?.ordenId ? ordenesService.obtener(state.ordenId) : null
+  // La orden que se muestra es exactamente la respuesta devuelta por Spring Boot.
+  const orden = state?.orden || null
 
   if (!orden) return <Navigate to="/" replace />
 

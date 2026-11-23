@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import TituloSeccion from '../../components/atoms/TituloSeccion'
 import FormularioUsuario from '../../components/organisms/FormularioUsuario'
-import { usuariosService } from '../../services/usuariosService'
+import { authApi } from '../../services/authApi'
 
 export default function Registro() {
-  function registrar({ password, ...datos }) {
-    return usuariosService.registrar({ ...datos, tipoUsuario: 'cliente' })
+  async function registrar({ password, ...datos }) {
+    try { await authApi.registro({ correo: datos.correo, nombre: datos.nombre, password }); return { ok: true } }
+    catch (error) { return { ok: false, error: error.message } }
   }
 
   return (

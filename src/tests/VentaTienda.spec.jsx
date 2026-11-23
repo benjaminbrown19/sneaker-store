@@ -1,8 +1,9 @@
-import { screen, fireEvent, within } from '@testing-library/react'
+import { screen, fireEvent, within, waitFor } from '@testing-library/react'
 import App from '../App'
 import { renderConProveedores } from './utilidades'
 import { productosService } from '../services/productosService'
-import { ordenesService } from '../services/ordenesService'
+import { ordenesApi } from '../services/ordenesApi'
+import { productosApi } from '../services/productosApi'
 
 function iniciarSesionComoVendedor(correo = 'carlos.soto@duoc.cl') {
   localStorage.setItem('grip_sesion', JSON.stringify({ id: 'USR-X', correo, nombre: 'Carlos', rol: 'vendedor' }))
@@ -36,17 +37,27 @@ describe('Venta en tienda (vendedor)', () => {
     expect(screen.getByText('Tu sesión no está asociada a una cuenta de vendedor registrada.')).toBeInTheDocument()
   })
 
-  it('muestra el vendedor y ofrece solo productos con stock disponible', () => {
-    productosService.reemplazarTodo(
-      productosService.listar().map((producto) => (producto.codigo === 'SNK-001' ? { ...producto, stock: 0 } : producto)),
+  it('muestra el vendedor y ofrece solo productos con stock disponible', async () => {
+    const catalogoSinStock = productosService.listar().map((producto) =>
+      producto.codigo === 'SNK-001' ? { ...producto, stock: 0 } : producto,
     )
+
+    // El componente parte del catálogo local y luego lo sincroniza con la API.
+    // Preparamos ambos orígenes con los mismos datos para evitar una carrera
+    // entre el primer render y la respuesta asíncrona del catálogo.
+    productosService.reemplazarTodo(catalogoSinStock)
+    spyOn(productosApi, 'listar').and.resolveTo(catalogoSinStock)
+
     renderVenta()
 
     expect(screen.getByText(/Vendedor: Carlos Soto/)).toBeInTheDocument()
-    const select = screen.getByLabelText('Producto')
-    const opciones = within(select).getAllByRole('option').map((opcion) => opcion.value)
-    expect(opciones).not.toContain('SNK-001')
-    expect(opciones).toContain('SNK-003')
+
+    await waitFor(() => {
+      const selectActual = screen.getByLabelText('Producto')
+      const opciones = within(selectActual).getAllByRole('option').map((opcion) => opcion.value)
+      expect(opciones).not.toContain('SNK-001')
+      expect(opciones).toContain('SNK-003')
+    })
   })
 
   it('agrega un producto al detalle de la venta y permite quitarlo', () => {
@@ -68,31 +79,31 @@ describe('Venta en tienda (vendedor)', () => {
     expect(screen.getByText('Todavía no hay productos en la venta.')).toBeInTheDocument()
   })
 
-  it('no registra la venta sin productos', () => {
+  it('no registra la venta sin productos', async () => {
     renderVenta()
     completarCliente()
     fireEvent.click(screen.getByRole('button', { name: 'Registrar venta' }))
 
     expect(screen.getByText('Agrega al menos un producto a la venta.')).toBeInTheDocument()
-    expect(ordenesService.listar().length).toBe(0)
+    expect((await ordenesApi.listar()).length).toBe(0)
   })
 
-  it('registra una venta en efectivo, descuenta stock y no muestra comprobante', () => {
+  it('registra una venta en efectivo, descuenta stock y no muestra comprobante', async () => {
     renderVenta()
     completarCliente()
     agregarProducto('SNK-002', '2')
     fireEvent.click(screen.getByRole('button', { name: 'Registrar venta' }))
 
-    expect(screen.getByText(/registrada para Juan Pérez/)).toBeInTheDocument()
+    expect(await screen.findByText(/registrada para Juan Pérez/)).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Comprobante de pago con tarjeta' })).not.toBeInTheDocument()
 
-    const orden = ordenesService.listarRecientes()[0]
+    const orden = (await ordenesApi.listarRecientes())[0]
     expect(orden.canal).toBe('vendedor')
-    expect(orden.pago).toEqual({ metodo: 'efectivo' })
+    expect(orden.pago.metodo).toBe('efectivo')
     expect(productosService.obtener('SNK-002').stock).toBe(10)
   })
 
-  it('exige los 4 últimos dígitos y el código de autorización al pagar con débito', () => {
+  it('exige los 4 últimos dígitos y el código de autorización al pagar con débito', async () => {
     renderVenta()
     completarCliente()
     agregarProducto('SNK-001')
@@ -101,10 +112,10 @@ describe('Venta en tienda (vendedor)', () => {
 
     expect(screen.getByText('Ingresa los 4 últimos dígitos de la tarjeta.')).toBeInTheDocument()
     expect(screen.getByText('El código de autorización debe tener entre 4 y 8 dígitos.')).toBeInTheDocument()
-    expect(ordenesService.listar().length).toBe(0)
+    expect((await ordenesApi.listar()).length).toBe(0)
   })
 
-  it('registra una venta con crédito en cuotas y muestra el comprobante', () => {
+  it('registra una venta con crédito en cuotas y muestra el comprobante', async () => {
     renderVenta()
     completarCliente()
     agregarProducto('SNK-001')
@@ -114,13 +125,16 @@ describe('Venta en tienda (vendedor)', () => {
     escribir('Código de autorización', '987654')
     fireEvent.click(screen.getByRole('button', { name: 'Registrar venta' }))
 
-    expect(screen.getByRole('heading', { name: 'Comprobante de pago con tarjeta' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Comprobante de pago con tarjeta' })).toBeInTheDocument()
     expect(screen.getByText('Crédito, 3 cuotas')).toBeInTheDocument()
     expect(screen.getByText('**** 1234')).toBeInTheDocument()
     expect(screen.getByText('987654')).toBeInTheDocument()
 
-    const orden = ordenesService.listarRecientes()[0]
-    expect(orden.pago).toEqual({ metodo: 'credito', ultimos4: '1234', codigoAutorizacion: '987654', cuotas: 3 })
+    const orden = (await ordenesApi.listarRecientes())[0]
+    expect(orden.pago.metodo).toBe('credito')
+    expect(orden.pago.ultimos4).toBe('1234')
+    expect(orden.pago.codigoAutorizacion).toBe('987654')
+    expect(orden.pago.cuotas).toBe(3)
     expect(productosService.obtener('SNK-001').stock).toBe(17)
   })
 })

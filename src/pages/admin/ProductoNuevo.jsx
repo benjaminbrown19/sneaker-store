@@ -1,16 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import TituloSeccion from '../../components/atoms/TituloSeccion'
 import FormularioProducto from '../../components/organisms/FormularioProducto'
-import { productosService } from '../../services/productosService'
+import { productosApi } from '../../services/productosApi'
 import { categoriasService } from '../../services/categoriasService'
 
 export default function ProductoNuevo() {
   const navigate = useNavigate()
 
-  function guardar(datos) {
-    const resultado = productosService.crear(datos)
-    if (resultado.ok) navigate('/admin/productos')
-    return resultado
+  async function guardar(datos) {
+    try { await productosApi.crear(datos); navigate('/admin/productos'); return { ok: true } }
+    catch (e) { return { ok: false, error: e.message } }
   }
 
   return (

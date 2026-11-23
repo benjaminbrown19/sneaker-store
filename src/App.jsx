@@ -1,7 +1,10 @@
-import { Route, Routes } from 'react-router-dom'
+
+import { Navigate, Route, Routes } from 'react-router-dom'
+
 import PlantillaTienda from './components/templates/PlantillaTienda'
 import PlantillaAdmin from './components/templates/PlantillaAdmin'
 import RutaPorRol from './components/templates/RutaPorRol'
+
 import Inicio from './pages/tienda/Inicio'
 import Productos from './pages/tienda/Productos'
 import DetalleProducto from './pages/tienda/DetalleProducto'
@@ -19,6 +22,7 @@ import Checkout from './pages/tienda/Checkout'
 import PagoExitoso from './pages/tienda/PagoExitoso'
 import PagoError from './pages/tienda/PagoError'
 import NoEncontrada from './pages/tienda/NoEncontrada'
+
 import Dashboard from './pages/admin/Dashboard'
 import Ordenes from './pages/admin/Ordenes'
 import DetalleOrden from './pages/admin/DetalleOrden'
@@ -40,17 +44,28 @@ import ReportesGenerales from './pages/admin/ReportesGenerales'
 import Perfil from './pages/admin/Perfil'
 import VentaTienda from './pages/admin/VentaTienda'
 
+// Acceso exclusivo para administrador
 function soloAdmin(elemento) {
-  return <RutaPorRol roles={['administrador']}>{elemento}</RutaPorRol>
+  return (
+    <RutaPorRol roles={['administrador']}>
+      {elemento}
+    </RutaPorRol>
+  )
 }
 
-function soloVendedor(elemento) {
-  return <RutaPorRol roles={['vendedor']}>{elemento}</RutaPorRol>
+// Acceso para administrador y vendedor
+function adminYVendedor(elemento) {
+  return (
+    <RutaPorRol roles={['administrador', 'vendedor']}>
+      {elemento}
+    </RutaPorRol>
+  )
 }
 
 export default function App() {
   return (
     <Routes>
+      {/* Páginas públicas de la tienda */}
       <Route element={<PlantillaTienda />}>
         <Route index element={<Inicio />} />
         <Route path="productos" element={<Productos />} />
@@ -71,27 +86,38 @@ export default function App() {
         <Route path="*" element={<NoEncontrada />} />
       </Route>
 
+      {/* Panel administrativo y de vendedor */}
       <Route path="admin" element={<PlantillaAdmin />}>
-        <Route index element={<Dashboard />} />
-        <Route path="ordenes" element={<Ordenes />} />
-        <Route path="ordenes/:id" element={<DetalleOrden />} />
-        <Route path="venta" element={soloVendedor(<VentaTienda />)} />
-        <Route path="productos" element={<ProductosAdmin />} />
+
+        {/* Solo administrador */}
+        <Route index element={soloAdmin(<Dashboard />)} />
+
+        {/* Administrador y vendedor */}
+        <Route path="ordenes" element={adminYVendedor(<Ordenes />)} />
+        <Route path="ordenes/:id" element={adminYVendedor(<DetalleOrden />)} />
+        <Route path="venta" element={adminYVendedor(<VentaTienda />)} />
+        <Route path="productos" element={adminYVendedor(<ProductosAdmin />)} />
+        <Route path="productos/:codigo" element={adminYVendedor(<ProductoDetalle />)} />
+        <Route path="perfil" element={adminYVendedor(<Perfil />)} />
+
+        {/* Solo administrador */}
         <Route path="productos/nuevo" element={soloAdmin(<ProductoNuevo />)} />
-        <Route path="productos/criticos" element={<ProductosCriticos />} />
+        <Route path="productos/criticos" element={soloAdmin(<ProductosCriticos />)} />
         <Route path="productos/reportes" element={soloAdmin(<ReportesProductos />)} />
-        <Route path="productos/:codigo" element={<ProductoDetalle />} />
         <Route path="productos/:codigo/editar" element={soloAdmin(<ProductoEditar />)} />
+
         <Route path="categorias" element={soloAdmin(<CategoriasAdmin />)} />
         <Route path="categorias/nueva" element={soloAdmin(<CategoriaNueva />)} />
         <Route path="categorias/:id/editar" element={soloAdmin(<CategoriaEditar />)} />
+
         <Route path="usuarios" element={soloAdmin(<Usuarios />)} />
         <Route path="usuarios/nuevo" element={soloAdmin(<UsuarioNuevo />)} />
         <Route path="usuarios/:id" element={soloAdmin(<UsuarioDetalle />)} />
         <Route path="usuarios/:id/editar" element={soloAdmin(<UsuarioEditar />)} />
         <Route path="usuarios/:id/historial" element={soloAdmin(<HistorialCompras />)} />
+
         <Route path="reportes" element={soloAdmin(<ReportesGenerales />)} />
-        <Route path="perfil" element={<Perfil />} />
+
       </Route>
     </Routes>
   )

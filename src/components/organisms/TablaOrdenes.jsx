@@ -4,11 +4,18 @@ import Insignia from '../atoms/Insignia'
 import Mensaje from '../atoms/Mensaje'
 import { formatearFecha, formatearPrecio } from '../../utils/formato'
 
-export default function TablaOrdenes({ ordenes, rutaBase = '/admin/ordenes' }) {
+function etiquetaEstado(estado) {
+  const normalizado = (estado || '').toLowerCase()
+  if (normalizado === 'pagada') return 'Pagada'
+  if (normalizado === 'anulada' || normalizado === 'cancelada') return 'Anulada'
+  return 'Registrada'
+}
+
+export default function TablaOrdenes({ ordenes = [], rutaBase = '/admin/ordenes' }) {
   if (ordenes.length === 0) {
     return (
       <Mensaje variante="light">
-        Todavía no hay órdenes. Se crean cuando alguien completa una compra.
+        Todavía no hay órdenes. Se muestran aquí cuando una compra queda registrada en el backend.
       </Mensaje>
     )
   }
@@ -32,10 +39,12 @@ export default function TablaOrdenes({ ordenes, rutaBase = '/admin/ordenes' }) {
           <tr key={orden.id}>
             <td className="dato-mono">{orden.id}</td>
             <td>{formatearFecha(orden.fecha)}</td>
-            <td>{orden.cliente.nombre} {orden.cliente.apellidos}</td>
-            <td className="text-end dato-mono">{orden.items.reduce((suma, item) => suma + item.cantidad, 0)}</td>
+            <td>{orden.cliente?.nombre || 'Cliente'} {orden.cliente?.apellidos || ''}</td>
+            <td className="text-end dato-mono">
+              {(orden.items || []).reduce((suma, item) => suma + Number(item.cantidad || 0), 0)}
+            </td>
             <td className="text-end dato-mono">{formatearPrecio(orden.total)}</td>
-            <td><Insignia tono="ok">Pagada</Insignia></td>
+            <td><Insignia tono={orden.estado === 'pagada' ? 'ok' : 'neutro'}>{etiquetaEstado(orden.estado)}</Insignia></td>
             <td><Link to={`${rutaBase}/${orden.id}`} className="btn btn-sm btn-outline-dark">Mostrar boleta</Link></td>
           </tr>
         ))}

@@ -48,12 +48,12 @@ export default function FormularioProducto({
   const [resultado, setResultado] = useState(null)
   const opcionesCategoria = categorias.map((categoria) => ({ valor: categoria.id, etiqueta: categoria.nombre }))
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault()
     setResultado(null)
     if (!validarTodo()) return
 
-    const respuesta = onGuardar({
+    const respuesta = await onGuardar({
       codigo: valores.codigo.trim().toUpperCase(),
       nombre: valores.nombre.trim(),
       descripcion: valores.descripcion.trim(),

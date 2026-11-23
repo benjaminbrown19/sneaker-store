@@ -4,24 +4,28 @@ import Boton from '../atoms/Boton'
 import Mensaje from '../atoms/Mensaje'
 import CampoFormulario from '../molecules/CampoFormulario'
 import { useFormulario } from '../../hooks/useFormulario'
-import { validarEmail, validarPassword } from '../../utils/validaciones'
+import { validarEmail } from '../../utils/validaciones'
 
 const reglas = {
   correo: validarEmail,
-  password: validarPassword,
+  password: (valor) => {
+    if (!valor) return 'La contraseña es obligatoria.'
+    if (valor.length < 8) return 'Introduce al menos 8 caracteres.'
+    return null
+  },
 }
 
 export default function FormularioLogin({ onIniciar }) {
   const { valores, campo, validarTodo } = useFormulario({ correo: '', password: '' }, reglas)
   const [fallo, setFallo] = useState(null)
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault()
     setFallo(null)
     if (!validarTodo()) return
 
-    const resultado = onIniciar(valores.correo, valores.password)
-    if (!resultado.ok) setFallo('No fue posible iniciar sesión. Revisa tus datos.')
+    const resultado = await onIniciar(valores.correo, valores.password)
+    if (!resultado.ok) setFallo(resultado.error || 'No fue posible iniciar sesión. Revisa tus datos.')
   }
 
   return (
