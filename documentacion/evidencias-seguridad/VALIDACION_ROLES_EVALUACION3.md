@@ -1,49 +1,50 @@
-# GRIP Sneaker Store — Validación de permisos (Evaluación 3)
-
-
+# GRIP — Validación de permisos y roles (Evaluación 3)
 
 ## Objetivo
-Complementar la evidencia de testing del proyecto, comprobando en el backend la restricción de acceso a la operación interna de registro de ventas. El informe de cobertura final señala que falta evidencia HTTP 403 con token de vendedor. Este documento es una plantilla de evidencia, no una prueba ejecutada.
 
-## Preparación
-1. Iniciar MySQL y backend localmente con las variables de entorno configuradas fuera de GitHub.
-2. Iniciar sesión como vendedor desde el flujo real de autenticación de la aplicación.
-3. Obtener el token JWT de esa sesión **solo para la prueba local**. Nunca copiarlo al repositorio ni a las capturas.
-4. Identificar en Swagger la operación `POST /api/v1/ordenes` y revisar el contrato del cuerpo de solicitud antes de ejecutar.
+Documentar los permisos que realmente implementan el frontend y el backend, y separar las verificaciones manuales comunicadas de las comprobaciones que solo se han revisado en el código.
 
-## Caso SEG-01 — Vendedor no puede registrar venta interna
-- **Actor:** vendedor autenticado.
-- **Acción:** enviar `POST /api/v1/ordenes` con su JWT y un cuerpo válido para la operación.
-- **Resultado esperado:** HTTP **403 Forbidden**.
-- **Resultado observado:** [PENDIENTE: escribir código HTTP y fecha].
-- **Evidencia:** [PENDIENTE: captura sin JWT, contraseñas ni datos personales].
-- **Estado:** [PENDIENTE / APROBADO / FALLIDO].
+## Matriz de permisos vigente
 
-## Caso SEG-02 — Administrador sí tiene permiso
-- **Actor:** administrador autenticado.
-- **Acción:** ejecutar la misma operación con un JWT de administrador y datos de prueba controlados.
-- **Resultado esperado:** la petición no es rechazada por permisos; el código exacto depende de la validez del cuerpo y reglas de negocio.
-- **Resultado observado:** [PENDIENTE].
-- **Evidencia:** [PENDIENTE].
-- **Estado:** [PENDIENTE / APROBADO / FALLIDO].
-- **Precaución:** esta operación puede crear una orden real. Usar datos de prueba y registrar cualquier cambio para poder revertirlo de manera segura.
+| Rol | Operaciones autorizadas |
+| --- | --- |
+| Visitante / cliente | Navegar la tienda y utilizar el checkout público \`POST /api/v1/ordenes/checkout\`. No puede consultar las órdenes internas ni acceder al panel. |
+| Vendedor | Consultar productos; consultar órdenes y boletas; acceder a su perfil; registrar ventas desde \`/admin/venta\` mediante \`POST /api/v1/ordenes\`. No puede crear, editar ni eliminar productos ni administrar categorías, usuarios o reportes exclusivos. |
+| Administrador | Acceso al panel completo; consulta de órdenes; registro de ventas; creación, edición y eliminación de productos; módulos administrativos locales. |
 
-## Caso SEG-03 — Ruta frontend bloqueada
-- **Actor:** vendedor autenticado.
-- **Acción:** intentar abrir directamente `http://localhost:5173/admin/venta`.
-- **Resultado esperado:** no acceder al formulario de registrar venta.
-- **Resultado observado:** [PENDIENTE; confirmar que la sesión de vendedor sigue activa].
-- **Estado:** [PENDIENTE / APROBADO / FALLIDO].
+La autorización backend está definida en \`SecurityConfig.java\`:
 
-## Registro de ejecución
-- Responsable: [Litzy — confirmar nombre de autoría en Git]
-- Fecha y hora: [24/11/2026 12:10]
-- Versión frontend (commit): [74a1b3f]
-- Versión backend (commit): [79fd451]
-- Resultado general: [OK]
-- Incidencias y acciones: [SIN INCIDENCIA]
+- \`GET /api/v1/ordenes/**\`: roles \`ADMINISTRADOR\` y \`VENDEDOR\`.
+- \`POST /api/v1/ordenes\`: roles \`ADMINISTRADOR\` y \`VENDEDOR\`.
+- \`POST /api/v1/ordenes/checkout\`: público.
+- Mutaciones de \`/api/v1/productos/**\`: solo \`ADMINISTRADOR\`.
 
-## Relación con los entregables
-Esta evidencia complementa el **documento de cobertura de testing actualizado**, que forma parte de los entregables del Examen Final. No sustituye las 178 pruebas automatizadas frontend ni las 2 pruebas unitarias backend, y no debe contabilizarse como prueba aprobada hasta su ejecución.
+En frontend, \`App.jsx\`, \`RutaPorRol.jsx\` y \`MenuLateralAdmin.jsx\` aplican la visibilidad y protección de rutas.
 
-**Seguridad:** no subir JWT, cookies, contraseñas, archivos `.env`, nombres de clientes reales ni capturas con información sensible.
+## Casos y resultados
+
+| ID | Actor / acción | Resultado esperado | Evidencia / estado |
+| --- | --- | --- | --- |
+| SEG-01 | Vendedor abre \`/admin/venta\`. | Acceso permitido y formulario de venta disponible. | Confirmado mediante la venta presencial comunicada y la ruta habilitada para ambos roles. |
+| SEG-02 | Vendedor envía una venta válida a \`POST /api/v1/ordenes\`. | HTTP 201 Created; orden registrada y stock actualizado. | HTTP 201 comunicado durante la validación manual. La venta apareció en el sistema y el stock de SNK-001 quedó en 15 unidades después de la venta posterior comunicada. |
+| SEG-03 | Vendedor consulta \`GET /api/v1/ordenes\` y el detalle de una orden. | Acceso permitido. | Permiso confirmado en \`SecurityConfig.java\`; la consulta de órdenes y boletas fue comunicada como verificada manualmente. |
+| SEG-04 | Vendedor intenta crear, editar o eliminar productos mediante la API. | HTTP 403 Forbidden. | Regla confirmada por inspección de \`SecurityConfig.java\`; no se adjunta una ejecución HTTP 403 independiente. |
+| SEG-05 | Cliente intenta consultar órdenes internas o abrir rutas administrativas. | Acceso denegado o redirección fuera del panel. | Regla confirmada en la configuración de seguridad y las rutas frontend; no se adjunta una prueba HTTP independiente. |
+| SEG-06 | Administrador registra una venta interna. | Acceso permitido; con solicitud válida, HTTP 201 Created. | Permiso confirmado en \`SecurityConfig.java\`; no se presenta como una nueva ejecución manual en este documento. |
+
+## Interpretación correcta del endpoint de venta
+
+**No debe esperarse HTTP 403 cuando un vendedor autenticado registra una venta válida en \`POST /api/v1/ordenes\`.** El backend autoriza expresamente a los roles administrador y vendedor. El resultado manual comunicado fue HTTP 201 Created.
+
+El endpoint público de checkout es distinto: \`POST /api/v1/ordenes/checkout\`. Este fuerza el canal \`online\` y no debe utilizarse para atribuir una venta a un vendedor.
+
+## Alcance de la evidencia
+
+- La venta del vendedor con respuesta HTTP 201 y la actualización de stock son verificaciones manuales comunicadas durante el trabajo.
+- Las pruebas Jasmine/Karma del frontend simulan las solicitudes \`fetch\`; no prueban por sí solas la autorización HTTP real del backend.
+- El repositorio backend contiene dos pruebas unitarias de \`ProductoService\`; no contiene una suite automatizada específica para autorización JWT de órdenes.
+- Los casos SEG-04 y SEG-05 describen el resultado que exige el código actual, pero no deben presentarse como pruebas HTTP ejecutadas si no se realiza y conserva esa evidencia.
+
+## Seguridad de las evidencias
+
+No incluir JWT, refresh tokens, cookies, contraseñas, archivos \`.env\`, datos personales reales ni capturas que expongan credenciales. Para una comprobación HTTP, usar cuentas y datos de prueba controlados.
