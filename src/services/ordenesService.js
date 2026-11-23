@@ -1,3 +1,7 @@
+/**
+ * Repositorio local legado conservado para pruebas unitarias históricas.
+ * Las pantallas de la aplicación deben usar ordenesApi para leer y crear órdenes en MySQL.
+ */
 import { crearRepositorio } from './repositorio'
 
 export const CLAVE_ORDENES = 'grip_ordenes'

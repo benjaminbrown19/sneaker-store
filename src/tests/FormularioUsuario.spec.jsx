@@ -48,14 +48,14 @@ describe('FormularioUsuario', () => {
     escribir('Región', 'metropolitana')
     escribir('Comuna', 'Ñuñoa')
     escribir('Dirección', 'Pasaje Las Rosas 789')
-    escribir('Contraseña', '1234')
-    escribir('Confirmar contraseña', '1234')
+    escribir('Contraseña', '12345678')
+    escribir('Confirmar contraseña', '12345678')
     fireEvent.click(screen.getByRole('button', { name: 'Crear' }))
 
     expect(onGuardar).toHaveBeenCalledTimes(1)
     const datos = onGuardar.calls.mostRecent().args[0]
     expect(datos.run).toBe('201234565')
-    expect(datos.password).toBe('1234')
+    expect(datos.password).toBe('12345678')
     expect(datos.passwordConfirmar).toBeUndefined()
   })
 })

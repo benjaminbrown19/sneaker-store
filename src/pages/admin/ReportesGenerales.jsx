@@ -1,36 +1,60 @@
+import { useEffect, useMemo, useState } from 'react'
 import Table from 'react-bootstrap/Table'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import TituloSeccion from '../../components/atoms/TituloSeccion'
+import Mensaje from '../../components/atoms/Mensaje'
 import TarjetaMetrica from '../../components/molecules/TarjetaMetrica'
-import { ordenesService } from '../../services/ordenesService'
+import { ordenesApi } from '../../services/ordenesApi'
 import { formatearPrecio } from '../../utils/formato'
 
 export default function ReportesGenerales() {
-  const ordenes = ordenesService.listar()
-  const ventas = ordenes.reduce((suma, orden) => suma + orden.total, 0)
+  const [ordenes, setOrdenes] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let activo = true
+    ordenesApi.listar()
+      .then((datos) => {
+        if (activo) setOrdenes(datos)
+      })
+      .catch((solicitudError) => {
+        if (activo) setError(solicitudError.message)
+      })
+      .finally(() => {
+        if (activo) setCargando(false)
+      })
+    return () => { activo = false }
+  }, [])
+
+  const ventas = ordenes.reduce((suma, orden) => suma + Number(orden.total || 0), 0)
   const promedio = ordenes.length ? Math.round(ventas / ordenes.length) : 0
   const conCupon = ordenes.filter((orden) => orden.cupon).length
 
-  const acumulado = {}
-  ordenes.forEach((orden) => {
-    orden.items.forEach((item) => {
-      const actual = acumulado[item.codigo] ?? { nombre: item.nombre, unidades: 0, monto: 0 }
-      acumulado[item.codigo] = {
-        nombre: item.nombre,
-        unidades: actual.unidades + item.cantidad,
-        monto: actual.monto + item.subtotal,
-      }
+  const masVendidos = useMemo(() => {
+    const acumulado = {}
+    ordenes.forEach((orden) => {
+      ;(orden.items || []).forEach((item) => {
+        const actual = acumulado[item.codigo] ?? { nombre: item.nombre, unidades: 0, monto: 0 }
+        acumulado[item.codigo] = {
+          nombre: item.nombre,
+          unidades: actual.unidades + Number(item.cantidad || 0),
+          monto: actual.monto + Number(item.subtotal || 0),
+        }
+      })
     })
-  })
-  const masVendidos = Object.entries(acumulado)
-    .map(([codigo, datos]) => ({ codigo, ...datos }))
-    .sort((a, b) => b.unidades - a.unidades)
-    .slice(0, 5)
+    return Object.entries(acumulado)
+      .map(([codigo, datos]) => ({ codigo, ...datos }))
+      .sort((a, b) => b.unidades - a.unidades)
+      .slice(0, 5)
+  }, [ordenes])
 
   return (
     <>
-      <TituloSeccion titulo="Reportes generales" subtitulo="Indicadores de ventas calculados desde las órdenes." />
+      <TituloSeccion titulo="Reportes generales" subtitulo="Indicadores calculados desde las órdenes guardadas en MySQL." />
+      {cargando && <Mensaje variante="info">Consultando ventas…</Mensaje>}
+      {error && <Mensaje variante="danger">{error}</Mensaje>}
       <Row xs={1} sm={2} xl={4} className="g-3 mb-4">
         <Col><TarjetaMetrica etiqueta="Órdenes" valor={ordenes.length} /></Col>
         <Col><TarjetaMetrica etiqueta="Ventas acumuladas" valor={formatearPrecio(ventas)} tono="exito" /></Col>

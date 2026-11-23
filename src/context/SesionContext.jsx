@@ -1,65 +1,48 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { leer, guardar, borrar } from '../services/almacen'
-import { usuariosService } from '../services/usuariosService'
-import { validarEmail, validarPassword } from '../utils/validaciones'
-
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { authApi } from '../services/authApi'
+import { EVENTO_SESION_EXPIRADA, guardarTokens, quitarTokens, tieneToken } from '../services/api'
 export const CLAVE_SESION = 'grip_sesion'
-
 const SesionContext = createContext(null)
-
+function sesionGuardada() {
+  try { return tieneToken() ? JSON.parse(sessionStorage.getItem(CLAVE_SESION) || 'null') : null }
+  catch { return null }
+}
 export function SesionProvider({ children }) {
-  const [sesion, setSesion] = useState(() => leer(CLAVE_SESION, null))
-
-  const iniciarSesion = useCallback((correo, password) => {
-    const errores = {
-      correo: validarEmail(correo),
-      password: validarPassword(password),
+  const [sesion, setSesion] = useState(sesionGuardada)
+  useEffect(() => {
+    // Si la renovación del JWT falla, api.js emite este evento: se cierra la sesión visible.
+    function cerrarPorExpiracion() {
+      sessionStorage.removeItem(CLAVE_SESION)
+      setSesion(null)
     }
-    if (errores.correo || errores.password) return { ok: false, errores }
-
-    const encontrado = usuariosService.buscarPorCorreo(correo)
-    const nueva = encontrado
-      ? { id: encontrado.id, correo: encontrado.correo, nombre: encontrado.nombre, rol: encontrado.tipoUsuario }
-      : { id: null, correo: correo.trim(), nombre: correo.trim().split('@')[0], rol: 'cliente' }
-
-    guardar(CLAVE_SESION, nueva)
-    setSesion(nueva)
-    return { ok: true, sesion: nueva }
+    window.addEventListener(EVENTO_SESION_EXPIRADA, cerrarPorExpiracion)
+    return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, cerrarPorExpiracion)
   }, [])
-
+  const iniciarSesion = useCallback(async (correo, password) => {
+    try {
+      const datos = await authApi.login(correo, password)
+      guardarTokens(datos)
+      sessionStorage.setItem(CLAVE_SESION, JSON.stringify(datos.usuario))
+      setSesion(datos.usuario)
+      return { ok: true, sesion: datos.usuario }
+    } catch (error) { return { ok: false, error: error.message } }
+  }, [])
   const cerrarSesion = useCallback(() => {
-    borrar(CLAVE_SESION)
-    setSesion(null)
+    quitarTokens(); sessionStorage.removeItem(CLAVE_SESION); setSesion(null)
   }, [])
-
   const actualizarSesion = useCallback((cambios) => {
-    setSesion((actual) => {
-      if (!actual) return actual
+    setSesion(actual => {
+      if (!actual) return null
       const nueva = { ...actual, ...cambios }
-      guardar(CLAVE_SESION, nueva)
+      sessionStorage.setItem(CLAVE_SESION, JSON.stringify(nueva))
       return nueva
     })
   }, [])
-
-  const valor = useMemo(
-    () => ({
-      sesion,
-      estaAutenticado: Boolean(sesion),
-      esPersonal: sesion?.rol === 'administrador' || sesion?.rol === 'vendedor',
-      iniciarSesion,
-      cerrarSesion,
-      actualizarSesion,
-    }),
-    [sesion, iniciarSesion, cerrarSesion, actualizarSesion],
-  )
-
+  const valor = useMemo(() => ({
+    sesion, estaAutenticado: Boolean(sesion),
+    esPersonal: sesion?.rol === 'administrador' || sesion?.rol === 'vendedor',
+    iniciarSesion, cerrarSesion, actualizarSesion,
+  }), [sesion, iniciarSesion, cerrarSesion, actualizarSesion])
   return <SesionContext.Provider value={valor}>{children}</SesionContext.Provider>
 }
-
-export function useSesion() {
-  const contexto = useContext(SesionContext)
-  if (!contexto) {
-    throw new Error('useSesion debe usarse dentro de <SesionProvider>')
-  }
-  return contexto
-}
+export function useSesion() { const contexto = useContext(SesionContext); if (!contexto) throw new Error('useSesion requiere SesionProvider'); return contexto }

@@ -8,8 +8,8 @@ export default function Login() {
   const { iniciarSesion } = useSesion()
   const navigate = useNavigate()
 
-  function iniciar(correo, password) {
-    const resultado = iniciarSesion(correo, password)
+  async function iniciar(correo, password) {
+    const resultado = await iniciarSesion(correo, password)
     if (resultado.ok) navigate('/')
     return resultado
   }

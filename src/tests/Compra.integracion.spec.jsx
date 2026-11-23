@@ -7,10 +7,12 @@ function escribir(etiqueta, valor) {
   fireEvent.change(screen.getByLabelText(etiqueta), { target: { value: valor } })
 }
 
-function llegarAlCheckout() {
-  fireEvent.click(screen.getAllByRole('button', { name: 'Añadir al carrito' })[0])
+async function llegarAlCheckout() {
+  const botonesAgregar = await screen.findAllByRole('button', { name: 'Añadir al carrito' })
+  fireEvent.click(botonesAgregar[0])
   fireEvent.click(screen.getByRole('link', { name: /Carrito de compras/ }))
-  fireEvent.click(screen.getByRole('button', { name: 'Continuar al pago' }))
+  fireEvent.click(await screen.findByRole('button', { name: 'Continuar al pago' }))
+  await screen.findByLabelText('Nombre')
 }
 
 function completarCheckout(tarjeta) {
@@ -25,7 +27,7 @@ function completarCheckout(tarjeta) {
 describe('Flujo de compra (integración)', () => {
   it('completa la compra, muestra la boleta, vacía el carrito y descuenta el stock', async () => {
     renderConProveedores(<App />, '/productos')
-    llegarAlCheckout()
+    await llegarAlCheckout()
     completarCheckout('4111 1111 1111 1111')
 
     expect(await screen.findByText('¡Compra realizada con éxito!')).toBeInTheDocument()
@@ -37,7 +39,7 @@ describe('Flujo de compra (integración)', () => {
 
   it('muestra la página de pago con error si la tarjeta termina en 0000 y conserva el carrito', async () => {
     renderConProveedores(<App />, '/productos')
-    llegarAlCheckout()
+    await llegarAlCheckout()
     completarCheckout('4111111111110000')
 
     expect(await screen.findByText(/No se pudo realizar el pago/)).toBeInTheDocument()
@@ -45,9 +47,10 @@ describe('Flujo de compra (integración)', () => {
     expect(productosService.obtener('SNK-001').stock).toBe(18)
   })
 
-  it('aplica un cupón en el carrito y refleja el descuento en el resumen', () => {
+  it('aplica un cupón en el carrito y refleja el descuento en el resumen', async () => {
     renderConProveedores(<App />, '/productos')
-    fireEvent.click(screen.getAllByRole('button', { name: 'Añadir al carrito' })[0])
+    const botonesAgregar = await screen.findAllByRole('button', { name: 'Añadir al carrito' })
+    fireEvent.click(botonesAgregar[0])
     fireEvent.click(screen.getByRole('link', { name: /Carrito de compras/ }))
 
     fireEvent.change(screen.getByLabelText('¿Tienes un cupón?'), { target: { value: 'grip10' } })

@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { leer, guardar, borrar } from '../services/almacen'
 import { productosService } from '../services/productosService'
+import { productosApi } from '../services/productosApi'
 import { armarLineas, buscarCupon, calcularResumen } from '../utils/carrito'
 
 export const CLAVE_CARRITO = 'grip_carrito'
@@ -14,6 +15,25 @@ export function CarritoProvider({ children }) {
     return Array.isArray(guardado) ? guardado : []
   })
   const [cupon, setCupon] = useState(() => leer(CLAVE_CUPON, null))
+  const [catalogoVersion, setCatalogoVersion] = useState(0)
+
+  const refrescarCatalogo = useCallback(async () => {
+    const productos = await productosApi.listar()
+    setCatalogoVersion((version) => version + 1)
+    return productos
+  }, [])
+
+  useEffect(() => {
+    let activo = true
+    productosApi.listar()
+      .then(() => {
+        if (activo) setCatalogoVersion((version) => version + 1)
+      })
+      .catch(() => {
+        // Si Spring Boot no está disponible, la tienda conserva el catálogo local de respaldo.
+      })
+    return () => { activo = false }
+  }, [])
 
   const persistirItems = useCallback((nuevos) => {
     guardar(CLAVE_CARRITO, nuevos)
@@ -87,7 +107,10 @@ export function CarritoProvider({ children }) {
     setCupon(null)
   }, [])
 
-  const lineas = useMemo(() => armarLineas(items, productosService.listar()), [items])
+  const lineas = useMemo(
+    () => armarLineas(items, productosService.listar()),
+    [items, catalogoVersion],
+  )
   const cantidadTotal = useMemo(() => lineas.reduce((suma, linea) => suma + linea.cantidad, 0), [lineas])
 
   const resumenPara = useCallback((tipoEntrega) => calcularResumen(lineas, cupon, tipoEntrega), [lineas, cupon])
@@ -107,8 +130,9 @@ export function CarritoProvider({ children }) {
       vaciar,
       aplicarCupon,
       quitarCupon,
+      refrescarCatalogo,
     }),
-    [items, lineas, cupon, cantidadTotal, resumen, resumenPara, agregar, quitar, cambiarCantidad, vaciar, aplicarCupon, quitarCupon],
+    [items, lineas, cupon, cantidadTotal, resumen, resumenPara, agregar, quitar, cambiarCantidad, vaciar, aplicarCupon, quitarCupon, refrescarCatalogo],
   )
 
   return <CarritoContext.Provider value={valor}>{children}</CarritoContext.Provider>
