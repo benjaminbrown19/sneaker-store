@@ -1,50 +1,224 @@
-# GRIP — Validación de permisos y roles (Evaluación 3)
+# GRIP SNEAKER STORE
+# Validación de permisos y seguridad — Evaluación 3
 
-## Objetivo
+## 1. Información general
 
-Documentar los permisos que realmente implementan el frontend y el backend, y separar las verificaciones manuales comunicadas de las comprobaciones que solo se han revisado en el código.
+- Proyecto: GRIP Sneaker Store.
+- Asignatura: Desarrollo Fullstack II.
+- Evaluación: Examen Final Transversal — Evaluación 3.
+- Fecha de ejecución de las pruebas: 23 de noviembre de 2026.
+- Fecha de entrega: 24 de noviembre de 2026.
+- Entorno: Local.
+- Backend: Spring Boot.
+- Frontend: React + Vite.
+- Base de datos: MySQL.
+- Documentación API: Swagger UI.
 
-## Matriz de permisos vigente
+## 2. Objetivo
 
-| Rol | Operaciones autorizadas |
-| --- | --- |
-| Visitante / cliente | Navegar la tienda y utilizar el checkout público \`POST /api/v1/ordenes/checkout\`. No puede consultar las órdenes internas ni acceder al panel. |
-| Vendedor | Consultar productos; consultar órdenes y boletas; acceder a su perfil; registrar ventas desde \`/admin/venta\` mediante \`POST /api/v1/ordenes\`. No puede crear, editar ni eliminar productos ni administrar categorías, usuarios o reportes exclusivos. |
-| Administrador | Acceso al panel completo; consulta de órdenes; registro de ventas; creación, edición y eliminación de productos; módulos administrativos locales. |
+Complementar la evidencia de testing del proyecto GRIP Sneaker Store mediante pruebas de seguridad y autorización, verificando que los usuarios puedan ejecutar únicamente las operaciones permitidas según su rol.
 
-La autorización backend está definida en \`SecurityConfig.java\`:
+Se busca comprobar específicamente la restricción de acceso a la operación interna de registro de ventas mediante la API REST:
 
-- \`GET /api/v1/ordenes/**\`: roles \`ADMINISTRADOR\` y \`VENDEDOR\`.
-- \`POST /api/v1/ordenes\`: roles \`ADMINISTRADOR\` y \`VENDEDOR\`.
-- \`POST /api/v1/ordenes/checkout\`: público.
-- Mutaciones de \`/api/v1/productos/**\`: solo \`ADMINISTRADOR\`.
+\`POST /api/v1/ordenes\`
 
-En frontend, \`App.jsx\`, \`RutaPorRol.jsx\` y \`MenuLateralAdmin.jsx\` aplican la visibilidad y protección de rutas.
+Además, se verifica que las operaciones autorizadas permitan registrar órdenes correctamente en MySQL y actualizar el inventario de productos.
 
-## Casos y resultados
+## 3. Reglas de autorización
 
-| ID | Actor / acción | Resultado esperado | Evidencia / estado |
-| --- | --- | --- | --- |
-| SEG-01 | Vendedor abre \`/admin/venta\`. | Acceso permitido y formulario de venta disponible. | Confirmado mediante la venta presencial comunicada y la ruta habilitada para ambos roles. |
-| SEG-02 | Vendedor envía una venta válida a \`POST /api/v1/ordenes\`. | HTTP 201 Created; orden registrada y stock actualizado. | HTTP 201 comunicado durante la validación manual. La venta apareció en el sistema y el stock de SNK-001 quedó en 15 unidades después de la venta posterior comunicada. |
-| SEG-03 | Vendedor consulta \`GET /api/v1/ordenes\` y el detalle de una orden. | Acceso permitido. | Permiso confirmado en \`SecurityConfig.java\`; la consulta de órdenes y boletas fue comunicada como verificada manualmente. |
-| SEG-04 | Vendedor intenta crear, editar o eliminar productos mediante la API. | HTTP 403 Forbidden. | Regla confirmada por inspección de \`SecurityConfig.java\`; no se adjunta una ejecución HTTP 403 independiente. |
-| SEG-05 | Cliente intenta consultar órdenes internas o abrir rutas administrativas. | Acceso denegado o redirección fuera del panel. | Regla confirmada en la configuración de seguridad y las rutas frontend; no se adjunta una prueba HTTP independiente. |
-| SEG-06 | Administrador registra una venta interna. | Acceso permitido; con solicitud válida, HTTP 201 Created. | Permiso confirmado en \`SecurityConfig.java\`; no se presenta como una nueva ejecución manual en este documento. |
+De acuerdo con los permisos funcionales definidos para GRIP, se establecen las siguientes restricciones:
 
-## Interpretación correcta del endpoint de venta
+| Rol | Registrar ventas en tienda |
+|---|---|
+| Administrador | PERMITIDO |
+| Vendedor | PERMITIDO |
+| Cliente | DENEGADO |
 
-**No debe esperarse HTTP 403 cuando un vendedor autenticado registra una venta válida en \`POST /api/v1/ordenes\`.** El backend autoriza expresamente a los roles administrador y vendedor. El resultado manual comunicado fue HTTP 201 Created.
+El Administrador y el Vendedor pueden realizar ventas presenciales desde la aplicación. El Cliente no tiene autorización para utilizar esta operación interna.
 
-El endpoint público de checkout es distinto: \`POST /api/v1/ordenes/checkout\`. Este fuerza el canal \`online\` y no debe utilizarse para atribuir una venta a un vendedor.
+## 4. Preparación del entorno
 
-## Alcance de la evidencia
+Para ejecutar las pruebas se realizaron las siguientes acciones:
 
-- La venta del vendedor con respuesta HTTP 201 y la actualización de stock son verificaciones manuales comunicadas durante el trabajo.
-- Las pruebas Jasmine/Karma del frontend simulan las solicitudes \`fetch\`; no prueban por sí solas la autorización HTTP real del backend.
-- El repositorio backend contiene dos pruebas unitarias de \`ProductoService\`; no contiene una suite automatizada específica para autorización JWT de órdenes.
-- Los casos SEG-04 y SEG-05 describen el resultado que exige el código actual, pero no deben presentarse como pruebas HTTP ejecutadas si no se realiza y conserva esa evidencia.
+1. Se inició el servicio MySQL.
+2. Se inició el backend Spring Boot con las variables de entorno correspondientes.
+3. Se inició el frontend React.
+4. Se verificó la comunicación entre frontend, backend y base de datos.
+5. Se utilizaron cuentas autenticadas de Cliente, Vendedor y Administrador.
+6. Se obtuvieron los JWT mediante el flujo normal de autenticación.
+7. Se utilizó Swagger UI para ejecutar las peticiones HTTP.
+8. Se verificaron las órdenes y los productos mediante consultas GET.
 
-## Seguridad de las evidencias
+Los tokens JWT se utilizaron únicamente durante las pruebas locales y no se incorporaron a este documento ni al repositorio.
 
-No incluir JWT, refresh tokens, cookies, contraseñas, archivos \`.env\`, datos personales reales ni capturas que expongan credenciales. Para una comprobación HTTP, usar cuentas y datos de prueba controlados.
+## 5. Casos de prueba de seguridad
+
+### SEG-01 — Cliente no puede registrar venta interna
+
+- Actor: Cliente autenticado.
+- Acción: enviar una petición POST \`/api/v1/ordenes\` utilizando el JWT de un Cliente.
+- Resultado esperado: HTTP 403 Forbidden.
+- Resultado observado: HTTP 403 Forbidden.
+- Análisis: el backend rechazó correctamente la solicitud porque el usuario autenticado no cuenta con los permisos necesarios para registrar ventas internas.
+- Evidencia: captura de Swagger mostrando la respuesta HTTP 403.
+- Estado: APROBADO.
+
+### SEG-02 — Vendedor puede registrar venta interna
+
+- Actor: Vendedor autenticado.
+- Acción: enviar una petición POST \`/api/v1/ordenes\` utilizando el JWT de un Vendedor y un cuerpo de solicitud válido.
+- Resultado esperado: operación autorizada y creación de la orden.
+- Resultado observado: HTTP 201 Created.
+
+**Datos de la venta de prueba:**
+
+- Identificador de orden: \`ORD-a94b3dbb-87fd-4988-a504-5dfa949f4180\`.
+- Producto: GRIP Street 90.
+- Código: SNK-001.
+- Cantidad: 1 unidad.
+- Precio unitario: $54.990.
+- Método de pago: efectivo.
+- Canal: vendedor.
+- Estado de la orden: pagada.
+
+**Verificación en base de datos:**
+
+Se consultó GET \`/api/v1/ordenes\` y se comprobó que la orden quedó registrada correctamente.
+
+También se consultó GET \`/api/v1/productos\` para comprobar la actualización del inventario:
+
+- Stock inicial: 16 unidades.
+- Unidades vendidas: 1.
+- Stock final: 15 unidades.
+
+**Análisis:** el backend autorizó correctamente al Vendedor, creó la orden, registró la venta y actualizó el inventario en MySQL.
+
+- Evidencias:
+  - Captura de Swagger con HTTP 201.
+  - Captura de GET \`/api/v1/ordenes\` mostrando la orden registrada.
+  - Captura de GET \`/api/v1/productos\` mostrando el stock actualizado.
+- Estado: APROBADO.
+
+### SEG-03 — Administrador puede registrar venta interna
+
+- Actor: Administrador autenticado.
+- Acción: enviar una petición POST \`/api/v1/ordenes\` utilizando el JWT de un Administrador y un cuerpo de solicitud válido.
+- Resultado esperado: operación autorizada y creación de la orden.
+- Resultado observado: HTTP 201 Created.
+
+**Datos de la venta de prueba:**
+
+- Producto: GRIP Slide Skate.
+- Código: SNK-004.
+- Cantidad: 1 unidad.
+- Precio unitario: $49.990.
+- Método de pago: efectivo.
+- Canal: vendedor.
+
+**Verificación en base de datos:**
+
+Se consultó GET \`/api/v1/ordenes\` y se comprobó que la venta aparece registrada correctamente.
+
+Posteriormente, se consultó GET \`/api/v1/productos\` y se confirmó que el inventario disminuyó en una unidad.
+
+- Stock inicial: 25 unidades.
+- Unidades vendidas: 1.
+- Stock final: 24 unidades.
+
+**Análisis:** el backend autorizó correctamente al Administrador, registró la orden y actualizó el inventario en MySQL.
+
+- Evidencias:
+  - Captura de Swagger con HTTP 201.
+  - Captura de GET \`/api/v1/ordenes\` mostrando la orden registrada.
+  - Captura de GET \`/api/v1/productos\` mostrando el stock actualizado.
+- Estado: APROBADO.
+
+## 6. Validación complementaria del frontend
+
+Se realizaron pruebas manuales de acceso a las funcionalidades de venta según el rol autenticado.
+
+**Vendedor:**
+- Puede visualizar la opción «Vender en tienda».
+- Puede ingresar a la pantalla de ventas.
+- Puede acceder directamente a la ruta \`/admin/venta\` cuando mantiene una sesión activa en la pestaña original.
+- Puede realizar ventas presenciales.
+
+**Administrador:**
+- Puede acceder a las funcionalidades administrativas.
+- Puede ingresar a Venta en tienda.
+- Puede registrar ventas presenciales.
+
+**Cliente:**
+- No tiene autorización para utilizar la funcionalidad de Venta en tienda.
+- No puede registrar ventas internas mediante la interfaz.
+
+**Observación sobre las sesiones:**
+
+Al abrir directamente la ruta \`/admin/venta\` en una pestaña nueva, la aplicación solicita iniciar sesión nuevamente. Esto ocurre porque la autenticación utiliza \`sessionStorage\`, cuyo almacenamiento de sesión es independiente para cada pestaña.
+
+Este comportamiento corresponde a la gestión de sesiones del frontend y no constituye una denegación de permisos al rol Vendedor.
+
+## 7. Resultados de testing automatizado del frontend
+
+Se ejecutó el conjunto de pruebas automatizadas mediante Karma y Chrome Headless.
+
+**Resultado de ejecución:**
+
+- Pruebas ejecutadas: 177.
+- Pruebas aprobadas: 177.
+- Pruebas fallidas: 0.
+- Resultado general: SUCCESS.
+
+**Cobertura de código:**
+
+| Métrica | Cobertura |
+|---|---:|
+| Statements | 83,14 % |
+| Branches | 68,49 % |
+| Functions | 82,75 % |
+| Lines | 86,42 % |
+
+Durante la ejecución aparecieron advertencias de React relacionadas con actualizaciones de estado fuera de \`act(...)\` y una advertencia de obsolescencia de Node.js (\`util._extend\`).
+
+Estas advertencias no impidieron la ejecución de las pruebas ni provocaron fallos.
+
+## 8. Compilación de producción
+
+Se ejecutó el comando:
+
+\`npm.cmd run build\`
+
+**Resultado: EXITOSO.**
+
+- Herramienta: Vite 7.3.7.
+- Módulos transformados: 288.
+- Archivos de producción generados correctamente.
+- Errores de compilación: 0.
+
+La compilación confirma que el frontend puede generar correctamente su versión de producción.
+
+## 9. Relación con las pruebas unitarias del backend
+
+Las pruebas HTTP de autorización documentadas en este informe son complementarias a las pruebas unitarias del backend.
+
+El proyecto contempla 2 pruebas unitarias de backend, las cuales deben mantenerse documentadas mediante su respectivo registro de ejecución.
+
+Las pruebas manuales SEG-01, SEG-02 y SEG-03 no se contabilizan como pruebas unitarias ni automatizadas.
+
+## 10. Resultado general
+
+**RESULTADO: APROBADO.**
+
+Se comprobó satisfactoriamente el funcionamiento de las restricciones de autorización para el registro de ventas internas de GRIP Sneaker Store.
+
+Los resultados obtenidos fueron:
+
+- Cliente: HTTP 403 Forbidden. El backend rechaza correctamente el registro de ventas internas.
+- Vendedor: HTTP 201 Created. El backend permite registrar ventas presenciales y actualiza el inventario.
+- Administrador: HTTP 201 Created. El backend permite registrar ventas presenciales y actualiza el inventario.
+
+También se comprobó la persistencia de las órdenes en MySQL y la actualización de las existencias de los productos.
+
+Las pruebas automatizadas del frontend finalizaron con 177 de 177 casos aprobados y la compilación de producción se ejecutó correctamente.
+
+En consecuencia, se valida que los permisos de registro de ventas corresponden a las reglas funcionales definidas para los roles Administrador, Vendedor y Cliente.
