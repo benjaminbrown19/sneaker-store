@@ -3,7 +3,7 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "GRIP Sneaker Store - Evaluación 3: React, integración REST y pruebas Jasmine/Karma",
+  "description": "GRIP Sneaker Store - Evaluación 2: frontend en React, Bootstrap y pruebas con Jasmine + Karma",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -43,7 +43,7 @@ Ejecuta las pruebas en Chrome Headless (sin necesidad de backend: `fetch` se sim
 | --- | --- |
 | Login, registro y renovación de token | API REST |
 | Productos (catálogo, detalle, crear, editar, eliminar) | API REST |
-| Órdenes y boletas (checkout, venta en tienda solo administrador, listado, detalle, reportes) | API REST |
+| Órdenes y boletas (checkout, venta en tienda, listado, detalle, reportes) | API REST |
 | Categorías | `localStorage` (pendiente de API) |
 | Usuarios del panel admin y perfil | `localStorage` (pendiente de API) |
 
@@ -62,7 +62,3 @@ src/
   utils/        formato, validaciones, cálculo del carrito
   tests/        pruebas Jasmine
 ```
-
-## Ajuste final de permisos
-
-El vendedor consulta productos y órdenes; no puede acceder a `/admin/venta`. El registro de venta interno `POST /api/v1/ordenes` requiere administrador. Se conserva `/admin/perfil` para edición de datos propios, sujeto a confirmación con Anexo 1. Las categorías y usuarios administrativos continúan en `localStorage`, no deben describirse como persistencia MySQL.

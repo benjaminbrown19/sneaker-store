@@ -95,7 +95,7 @@ export default function App() {
         {/* Administrador y vendedor */}
         <Route path="ordenes" element={adminYVendedor(<Ordenes />)} />
         <Route path="ordenes/:id" element={adminYVendedor(<DetalleOrden />)} />
-        <Route path="venta" element={soloAdmin(<VentaTienda />)} />
+        <Route path="venta" element={adminYVendedor(<VentaTienda />)} />
         <Route path="productos" element={adminYVendedor(<ProductosAdmin />)} />
         <Route path="productos/:codigo" element={adminYVendedor(<ProductoDetalle />)} />
         <Route path="perfil" element={adminYVendedor(<Perfil />)} />

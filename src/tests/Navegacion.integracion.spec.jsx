@@ -113,13 +113,6 @@ describe('Navegación del panel administrativo (integración)', () => {
     expect(await screen.findByText('Tarjeta terminada en 4242')).toBeInTheDocument()
   })
 
-  it('el vendedor no puede entrar a Venta en tienda mediante URL directa', async () => {
-    iniciarSesionComo('vendedor')
-    renderConProveedores(<App />, '/admin/venta')
-    expect(await screen.findByRole('heading', { level: 1, name: 'Productos' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { level: 1, name: 'Venta en tienda' })).not.toBeInTheDocument()
-  })
-
   it('el vendedor puede ver su perfil, pero no acceder a productos críticos', async () => {
     iniciarSesionComo('vendedor')
     const { unmount } = renderConProveedores(<App />, '/admin/perfil')

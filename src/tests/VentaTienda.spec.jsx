@@ -5,12 +5,12 @@ import { productosService } from '../services/productosService'
 import { ordenesApi } from '../services/ordenesApi'
 import { productosApi } from '../services/productosApi'
 
-function iniciarSesionComoAdmin(correo = 'ana.perez@duoc.cl') {
-  localStorage.setItem('grip_sesion', JSON.stringify({ id: 'USR-X', correo, nombre: 'Ana', rol: 'administrador' }))
+function iniciarSesionComoVendedor(correo = 'carlos.soto@duoc.cl') {
+  localStorage.setItem('grip_sesion', JSON.stringify({ id: 'USR-X', correo, nombre: 'Carlos', rol: 'vendedor' }))
 }
 
 function renderVenta() {
-  iniciarSesionComoAdmin()
+  iniciarSesionComoVendedor()
   return renderConProveedores(<App />, '/admin/venta')
 }
 
@@ -29,9 +29,9 @@ function completarCliente() {
   escribir('Apellidos del cliente', 'Pérez')
 }
 
-describe('Venta en tienda (administrador)', () => {
+describe('Venta en tienda (vendedor)', () => {
   it('muestra un error si la sesión no corresponde a un vendedor registrado', () => {
-    iniciarSesionComoAdmin('nadie@duoc.cl')
+    iniciarSesionComoVendedor('nadie@duoc.cl')
     renderConProveedores(<App />, '/admin/venta')
 
     expect(screen.getByText('Tu sesión no está asociada a una cuenta de vendedor registrada.')).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('Venta en tienda (administrador)', () => {
 
     renderVenta()
 
-    expect(screen.getByText(/Vendedor: Ana Pérez/)).toBeInTheDocument()
+    expect(screen.getByText(/Vendedor: Carlos Soto/)).toBeInTheDocument()
 
     await waitFor(() => {
       const selectActual = screen.getByLabelText('Producto')

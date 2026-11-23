@@ -17,7 +17,7 @@ const ENLACES = [
   {
     a: '/admin/venta',
     etiqueta: 'Venta en tienda',
-    roles: ['administrador'],
+    roles: ['administrador', 'vendedor'],
   },
   {
     a: '/admin/productos',
