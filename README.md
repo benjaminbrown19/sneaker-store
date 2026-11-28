@@ -7,7 +7,8 @@ Tienda online académica de zapatillas para DSY1104 Desarrollo Fullstack II. Fro
 - React 19, React Router 7 y Vite 7.
 - Bootstrap 5.3.8 y React-Bootstrap 2.10.10.
 - Jasmine 5, Karma 6, React Testing Library e Istanbul.
-- Backend asociado: [grip-backend](https://github.com/benjaminbrown19/grip-backend).
+- Backend en la nube (Examen Final): [grip-microservicios](https://github.com/benjaminbrown19/grip-microservicios) — 3 microservicios Spring Boot + API Gateway en AWS EC2.
+- Backend monolítico (Evaluación 3, plan B): [grip-backend](https://github.com/benjaminbrown19/grip-backend).
 - Base de datos del backend: MySQL 8.
 
 ## Requisitos y puesta en marcha (MySQL local, sin Docker)
@@ -25,6 +26,26 @@ npm run dev
 La aplicación queda en http://localhost:5173. El backend utiliza http://127.0.0.1:8080/api/v1.
 
 Si el backend utiliza otra dirección, definir `VITE_API_URL` en un archivo local `.env.local`. No incluir contraseñas, tokens ni secretos en archivos versionados.
+
+## Ejecución con el backend en la nube (AWS EC2 + microservicios)
+
+Para el Examen Final el backend se ejecuta en AWS (instancia EC2 `grip-servidor`, AWS Academy Learner Lab) con Docker Compose: `ms-usuarios`, `ms-productos` y `ms-ordenes` detrás de un API Gateway Nginx que publica solo el puerto 8080. Detalle en el repositorio [grip-microservicios](https://github.com/benjaminbrown19/grip-microservicios).
+
+El frontend se ejecuta en el computador local, igual que en el ejemplo de despliegue del curso:
+
+1. Copiar `.env.development.local.example` como `.env.development.local` y reemplazar `IP_PUBLICA_EC2` por la IP pública actual de la instancia (cambia si el laboratorio reinicia la EC2).
+2. Ejecutar:
+
+```powershell
+npm ci
+npm run dev
+```
+
+3. Abrir http://localhost:5173 (el puerto **5173** es el permitido por CORS en los microservicios).
+
+Requisitos del lado de AWS: la instancia encendida (iniciar el Learner Lab) y la IP pública de quien usa el frontend autorizada en el puerto 8080 del grupo de seguridad. El archivo `.env.development.local` está excluido de Git (`*.local`).
+
+Swagger unificado de los tres microservicios: `http://IP_PUBLICA_EC2:8080/swagger-ui/index.html`.
 
 ## Integración con el backend
 
